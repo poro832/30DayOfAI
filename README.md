@@ -1,2 +1,1 @@
-# 30DaysOfAI
-30 Days of AI
+# 30 Days of AI
