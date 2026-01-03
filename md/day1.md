@@ -25,8 +25,8 @@ Before running Day 1, you need to configure your Snowflake connection based on w
 ```toml
 [connections.snowflake]
 account = "xy12345.us-east-1"       # Find in Snowsight → Account → View account details
-user = "yourusername"                    # Your Snowflake username
-password = "yourpassword"       # Your Snowflake password
+user = "yourusername"               # Your Snowflake username
+password = "yourpassword"           # Your Snowflake password
 role = "ACCOUNTADMIN"               # Your role
 warehouse = "COMPUTE_WH"            # Your warehouse
 database = "SNOWFLAKE_LEARNING_DB"  # Your database
