@@ -6,6 +6,29 @@ For today's challenge, our goal is to run a large language model (LLM) directly 
 
 Let's break down what each part of the code does.
 
+#### Install prerequisite libraries
+
+In forthcoming lessons we'll leverage Snowflake's Cortex AI and therefore please install the following prerequisite libraries:
+```
+snowflake-ml-python==1.20.0
+   snowflake-snowpark-python==1.44.0
+```
+
+##### Locally
+
+Save the above in `requirements.txt` and run `pip install -r requirements.txt`
+
+Or you could also run `pip install snowflake-ml-python==1.20.0 snowflake-snowpark-python==1.44.0`
+
+##### Streamlit Community Cloud
+
+Save the above in `requirements.txt` and include this in the GitHub repo of your app.
+
+##### Streamlit in Snowflake
+
+Click on the packages drop-down and enter the libraries name as shown:
+![](assets/sis_install_prerequisite_libraries.png)
+
 #### 1. Import Libraries & Connect
 
 ```python
@@ -17,7 +40,7 @@ import json
 try:
     # Works in Streamlit in Snowflake
     from snowflake.snowpark.context import get_active_session
-    session = get_active_session()
+session = get_active_session()
 except:
     # Works locally and on Streamlit Community Cloud
     from snowflake.snowpark import Session
