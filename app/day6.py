@@ -68,3 +68,7 @@ if st.button("Generate Post"):
     # Display Result
     st.subheader("Generated Post:")
     st.markdown(response)
+
+# Footer
+st.divider()
+st.caption("Day 6: Status UI for Long-Running Task | 30 Days of AI")

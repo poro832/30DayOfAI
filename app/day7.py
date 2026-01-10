@@ -81,3 +81,7 @@ if st.button("Generate Post"):
     with st.container(border=True):
         st.subheader(":material/output: Generated post:")
         st.markdown(response)
+
+# Footer
+st.divider()
+st.caption("Day 7: Theming and Layout | 30 Days of AI")

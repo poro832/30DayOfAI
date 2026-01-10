@@ -53,3 +53,7 @@ if st.button("Generate Post"):
     response = call_cortex_llm(prompt)
     st.subheader("Generated Post:")
     st.markdown(response)
+
+# Footer
+st.divider()
+st.caption("Day 5: Build a Post Generator App | 30 Days of AI")
