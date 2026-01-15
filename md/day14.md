@@ -1,10 +1,10 @@
-Building on Day 12's streaming chatbot, today we're adding **visual polish with avatars** and **robust error handling** to create a production-ready chatbot. Users can now personalize the appearance of their chat, and the app will handle API failures gracefully without crashing.
+Building on previous chatbots, today we're adding **visual polish with avatars** and **robust error handling** to create a production-ready chatbot. Users can now personalize the appearance of their chat, and the app will handle API failures gracefully without crashing.
 
 ---
 
 ### :material/settings: How It Works: Step-by-Step
 
-Day 14 keeps everything from Day 12 (streaming with custom generator) and adds **custom avatars** and **error handling**.
+Day 14 keeps everything from previous days and adds **custom avatars** and **error handling**.
 
 #### What's Kept from Previous Days:
 - :material/check_circle: Streaming responses with custom generator (Day 12)
@@ -139,4 +139,3 @@ Then disable the checkbox and try again to see normal operation.
 - [st.chat_message Avatar Parameter](https://docs.streamlit.io/develop/api-reference/chat/st.chat_message)
 - [st.error Documentation](https://docs.streamlit.io/develop/api-reference/status/st.error)
 - [Python Exception Handling](https://docs.python.org/3/tutorial/errors.html)
-
