@@ -3,64 +3,33 @@
 
 import streamlit as st
 
-st.title(":material/memory: Understanding Session State")
+st.title(":material/memory: Session State 이해하기")
 
-st.warning("**Instructions:** Try clicking the + and - buttons in both columns to see the difference.")
-
-# Create two columns for side-by-side comparison
 col1, col2 = st.columns(2)
 
-# --- COLUMN 1: THE WRONG WAY ---
+# --- 컬럼 1: 잘못된 방법 (초기화 문제) ---
 with col1:
-    st.header(":material/cancel: Standard Variable")
-    st.write("This resets on every click.")
-
-    # This line runs every time you click ANY button on the page.
-    # It effectively erases your progress immediately.
+    st.header("일반 변수")
+    st.write("클릭할 때마다 초기화됩니다.")
     count_wrong = 0
-    
-    # We use nested columns here to put the + and - buttons side-by-side
-    subcol_left, subcol_right = st.columns(2)
-    
-    with subcol_left:
-        # Note: We must give every button a unique 'key'
-        if st.button(":material/add:", key="std_plus"):
-            count_wrong += 1
+    if st.button("증가 (+1)", key="std_plus"):
+        count_wrong += 1
+    st.metric("Count", count_wrong)
 
-    with subcol_right:
-        if st.button(":material/remove:", key="std_minus"):
-            count_wrong -= 1
-    
-    st.metric("Standard Count", count_wrong)
-    st.caption("It never gets past 1 or -1 because `count_wrong` resets to 0 before the math happens.")
-
-
-# --- COLUMN 2: THE RIGHT WAY ---
+# --- 컬럼 2: 올바른 방법 (Session State) ---
 with col2:
-    st.header(":material/check_circle: Session State")
-    st.write("This memory persists.")
+    st.header("Session State")
+    st.write("값이 유지됩니다.")
 
-    # 1. Initialization: Create the key only if it doesn't exist yet
-    if "counter" not in st.session_state:
-        st.session_state.counter = 0
+    # [실습] Session State를 초기화하고 값을 업데이트하는 코드를 작성하세요.
+    # 1. 초기화 (Key가 없을 때만 생성)
+    # 2. 버튼 클릭 시 값 증가
+    # 3. 값 표시
     
-    # We use nested columns here as well
-    subcol_left_2, subcol_right_2 = st.columns(2)
-
-    with subcol_left_2:
-        # 2. Modification: Update the dictionary value (Increment)
-        if st.button(":material/add:", key="state_plus"):
-            st.session_state.counter += 1
-
-    with subcol_right_2:
-        # 2. Modification: Update the dictionary value (Decrement)
-        if st.button(":material/remove:", key="state_minus"):
-            st.session_state.counter -= 1
+    # 여기에 코드를 작성하세요
+    pass 
     
-    # 3. Read: Display the value
-    st.metric("State Count", st.session_state.counter)
-    st.caption("This works because we only set the counter to 0 if it doesn't exist.")
+    st.info("코드를 완성하세요.")
 
-# Footer
 st.divider()
 st.caption("Day 9: Understanding Session State | 30 Days of AI")

@@ -5,77 +5,50 @@ import streamlit as st
 import json
 from snowflake.snowpark.functions import ai_complete
 
-# Connect to Snowflake
+# Snowflake 연결
 try:
-    # Works in Streamlit in Snowflake
     from snowflake.snowpark.context import get_active_session
     session = get_active_session()
 except:
-    # Works locally and on Streamlit Community Cloud
     from snowflake.snowpark import Session
     session = Session.builder.configs(st.secrets["connections"]["snowflake"]).create()
 
-def call_llm(prompt_text: str) -> str:
-    """Call Snowflake Cortex LLM."""
-    df = session.range(1).select(
-        ai_complete(model="claude-3-5-sonnet", prompt=prompt_text).alias("response")
-    )
-    response_raw = df.collect()[0][0]
-    response_json = json.loads(response_raw)
-    if isinstance(response_json, dict):
-        return response_json.get("choices", [{}])[0].get("messages", "")
-    return str(response_json)
+def call_llm(prompt_text):
+    # 실제로는 Cortex를 호출해야 함
+    return f"I received your context. Prompt length: {len(prompt_text)}"
 
-st.title(":material/chat: Chatbot with History")
+st.title(":material/chat: 문맥을 기억하는 챗봇")
 
-# Initialize messages
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "assistant", "content": "Hello! I'm your AI assistant. How can I help you today?"}
-    ]
+    st.session_state.messages = [{"role": "assistant", "content": "안녕하세요!"}]
 
-# Sidebar to show conversation stats
+# 사이드바: 초기화 버튼
 with st.sidebar:
-    st.header("Conversation Stats")
-    user_msgs = len([m for m in st.session_state.messages if m["role"] == "user"])
-    assistant_msgs = len([m for m in st.session_state.messages if m["role"] == "assistant"])
-    st.metric("Your Messages", user_msgs)
-    st.metric("AI Responses", assistant_msgs)
-    
-    if st.button("Clear History"):
-        st.session_state.messages = [
-            {"role": "assistant", "content": "Hello! I'm your AI assistant. How can I help you today?"}
-        ]
+    if st.button("대화 초기화"):
+        st.session_state.messages = []
         st.rerun()
 
-# Display all messages from history
+# 기록 표시
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+        st.write(message["content"])
 
-# Chat input
-if prompt := st.chat_input("Type your message..."):
-    # Add and display user message
+if prompt := st.chat_input("메시지 입력..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.write(prompt)
     
-    # Generate and display assistant response
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            # Build the full conversation history for context
-            conversation = "\n\n".join([
-                f"{'User' if msg['role'] == 'user' else 'Assistant'}: {msg['content']}"
-                for msg in st.session_state.messages
-            ])
-            full_prompt = f"{conversation}\n\nAssistant:"
-            
-            response = call_llm(full_prompt)
-        st.markdown(response)
+        # [실습] 이전 대화 기록을 모두 합쳐서 하나의 '문맥(Context)' 문자열을 만들고, 
+        # 이를 프롬프트에 포함시켜 LLM을 호출하세요.
+        
+        # 여기에 코드를 작성하세요
+        full_prompt = prompt # 임시 (실습 시 수정 필요)
+        
+        response = call_llm(full_prompt)
+        st.write(response)
     
-    # Add assistant response to state
     st.session_state.messages.append({"role": "assistant", "content": response})
-    st.rerun()
 
 st.divider()
 st.caption("Day 11: Displaying Chat History | 30 Days of AI")
