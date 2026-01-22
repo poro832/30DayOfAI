@@ -36,21 +36,31 @@ with col3:
 #### 2. Smart Service Selection
 
 ```python
-# Check for search service from Day 19
-default_service = st.session_state.get('search_service', 'RAG_DB.RAG_SCHEMA.CUSTOMER_REVIEW_SEARCH')
+# Default search service from Day 19
+default_service = 'RAG_DB.RAG_SCHEMA.CUSTOMER_REVIEW_SEARCH'
 
 # Try to get available services
-services_result = session.sql("SHOW CORTEX SEARCH SERVICES").collect()
-available_services = [f"{row['database_name']}.{row['schema_name']}.{row['name']}" 
-                    for row in services_result]
+try:
+    services_result = session.sql("SHOW CORTEX SEARCH SERVICES").collect()
+    available_services = [f"{row['database_name']}.{row['schema_name']}.{row['name']}" 
+                        for row in services_result] if services_result else []
+except:
+    available_services = []
+
+# Ensure default service is always first
+if default_service in available_services:
+    available_services.remove(default_service)
+available_services.insert(0, default_service)
 
 # Selectbox with manual option
 search_service = st.selectbox("Search Service:", options=available_services)
 ```
 
-* **Auto-detection**: Automatically finds the search service created in Day 19
-* **Dropdown selection**: Shows all available Cortex Search services in the account
-* **Manual entry option**: Allows users to enter a custom service path if needed
+* **Explicit default**: Sets `RAG_DB.RAG_SCHEMA.CUSTOMER_REVIEW_SEARCH` as the default service name from Day 19
+* **Auto-detection**: Queries Snowflake to find all available Cortex Search services in the account
+* **Default always first**: Ensures the default service is always at position 0 (the default selection)
+* **Dropdown selection**: Shows all available services in the selectbox
+* **Manual entry option**: The app also allows users to enter a custom service path if needed
 
 #### 3. Retrieval with Cortex Search
 
