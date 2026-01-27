@@ -1,40 +1,40 @@
-# 30 Days Of AI with Streamlit 🎈     
+# 30 Days Of AI with Streamlit 🎈
 
-Welcome to **#30DaysOfAI** — a comprehensive 30-day challenge to learn, build, and deploy AI-powered applications using [Streamlit](https://streamlit.io) and [Snowflake Cortex AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/overview).
+**#30DaysOfAI**에 오신 것을 환영합니다 — [Streamlit](https://streamlit.io) 및 [Snowflake Cortex AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/overview)를 사용하여 AI 기반 애플리케이션을 배우고 구축 및 배포하는 포괄적인 30일 챌린지입니다.
 
-## 🎯 What You'll Build
+## 🎯 무엇을 만들게 되나요?
 
-Master AI app development from chatbots to production-ready RAG systems and intelligent agents.
+챗봇부터 프로덕션 배포 가능한 RAG 시스템 및 지능형 에이전트까지 AI 앱 개발을 마스터하세요.
 
-## 📏 Challenge Rules
+## 📏 챌린지 규칙
 
-1. **Access the daily challenge**
-   - 💻 Code: [github.com/streamlit/30daysofai](https://github.com/streamlit/30daysofai)
-   - 🕹️ Instructions: [30daysofai.streamlit.app](https://30daysofai.streamlit.app)
+1. **매일 챌린지 접속하기**
+   - 💻 코드: [github.com/streamlit/30daysofai](https://github.com/streamlit/30daysofai)
+   - 🕹️ 지침: [30daysofai.streamlit.app](https://30daysofai.streamlit.app)
 
-2. **Build the app** following daily instructions
+2. **앱 만들기** 매일 지침에 따라 앱을 만듭니다.
 
-3. **Share your progress** on social media with **#30DaysOfAI**
+3. **진행 상황 공유하기** 소셜 미디어에 **#30DaysOfAI**와 함께 공유하세요.
 
-4. **Complete all 30 days** and DM [Chanin Nantasenamat](https://www.linkedin.com/in/chanin-nantasenamat/) or [Jessica Smith](https://www.linkedin.com/in/jessica-s-095a861b3/)
+4. **30일 모두 완료하기** 완료 후 [Chanin Nantasenamat](https://www.linkedin.com/in/chanin-nantasenamat/) 또는 [Jessica Smith](https://www.linkedin.com/in/jessica-s-095a861b3/)에게 DM을 보내세요.
 
-5. **Get recognized** in the Hall of Fame 🏆 (+ possible swags and stickers!)
+5. **명예의 전당 등극** 🏆 (그리고 굿즈와 스티커를 받을 수도 있습니다!)
 
-## 🚀 Getting Started
+## 🚀 시작하기
 
-### Prerequisites
+### 필수 조건
 
-- Python 3.11, 3.12 (3.13 will work if `llvmlite`, `numba` are installed)
-- [Snowflake free trial](https://signup.snowflake.com/) (120 days of credits)
-- Basic Python knowledge
-- Enthusiasm for AI! 🧠
+- Python 3.11, 3.12 (3.13은 `llvmlite`, `numba`가 설치된 경우 작동)
+- [Snowflake 무료 체험판](https://signup.snowflake.com/) (120일 크레딧 제공)
+- 기본적인 Python 지식
+- AI에 대한 열정! 🧠
 
-### Locally
+### 로컬 환경
 
-1. **Install dependencies**
+1. **의존성 설치**
    ```bash
    pip install -r requirements.txt
-   # or with uv:
+   # 또는 uv 사용 시:
    uv pip install -e .
    ```
 
@@ -45,9 +45,9 @@ Master AI app development from chatbots to production-ready RAG systems and inte
    snowflake-snowpark-python==1.44.0
    ```
 
-3. **Configure Snowflake secrets**
-   
-   Create `.streamlit/secrets.toml` in your project root:
+2. **Snowflake 시크릿 구성**
+
+   프로젝트 루트에 `.streamlit/secrets.toml` 파일을 생성하세요:
    ```toml
    [connections.snowflake]
    account = "your_account_identifier"
@@ -58,84 +58,84 @@ Master AI app development from chatbots to production-ready RAG systems and inte
    database = "your_database"
    schema = "your_schema"
    ```
-   
-   **Important:** Add `.streamlit/secrets.toml` to `.gitignore` — never commit secrets!
 
-4. **Run the app**
+   **중요:** `.streamlit/secrets.toml`을 `.gitignore`에 추가하세요 — 시크릿은 절대 커밋하지 마세요!
+
+3. **앱 실행**
    ```bash
    cd app
    streamlit run day1.py
    ```
 
-### In Snowflake
+### Snowflake 환경
 
-**Recommended for production** — no secrets setup needed!
+**프로덕션 환경 권장** — 시크릿 설정이 필요 없습니다!
 
-1. Navigate to Snowsight → Streamlit
-2. Create new Streamlit app
-3. Copy code from `app/dayX.py`
-4. Run in Snowflake
+1. Snowsight 탐색 → Streamlit
+2. 새 Streamlit 앱 생성
+3. `app/dayX.py`의 코드를 복사
+4. Snowflake에서 실행
 
-**Benefits:**
-- ✅ Automatic authentication
-- ✅ Production-ready by default
-- ✅ Inherits Snowflake security
+**장점:**
+- ✅ 자동 인증
+- ✅ 기본적으로 프로덕션 준비 완료
+- ✅ Snowflake 보안 상속
 
-## 📁 Repository Structure
+## 📁 저장소 구조
 
 ```
 30days-genai-master/
-├── app/               # Streamlit applications (day1.py - day30.py)
-├── md/                # Detailed lesson documentation (day1.md - day30.md)
-├── toml/              # Configuration files for specific lessons
-├── pyproject.toml     # Python dependencies
-└── README.md          # This file
+├── app/               # Streamlit 애플리케이션 (day1.py - day30.py)
+├── md/                # 상세 레슨 문서 (day1.md - day30.md)
+├── toml/              # 특정 레슨을 위한 설정 파일
+├── pyproject.toml     # Python 의존성
+└── README.md          # 이 파일
 ```
 
-Each day includes:
-- **📱 App file** (`app/dayX.py`) - Complete, runnable code
-- **📖 Documentation** (`md/dayX.md`) - Step-by-step explanations
-- **💡 Key concepts** - What you'll learn and why it matters
+매일 포함되는 내용:
+- **📱 앱 파일** (`app/dayX.py`) - 실행 가능한 전체 코드
+- **📖 문서** (`md/dayX.md`) - 단계별 설명
+- **💡 핵심 개념** - 배우게 될 내용과 중요한 이유
 
 
-## 🛠️ Technologies
+## 🛠️ 기술
 
-- **[Streamlit](https://streamlit.io)** - Fast, beautiful web apps for ML and data science
-- **[Snowflake Cortex AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/overview)** - LLM functions and AI services
-- **[Cortex Search](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-search)** - Semantic search service
-- **[Cortex Analyst](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst)** - Natural language to SQL
-- **[Cortex Agents](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents)** - Autonomous AI agents
-- **[TruLens](https://www.trulens.org/)** - LLM evaluation and observability
+- **[Streamlit](https://streamlit.io)** - ML 및 데이터 과학을 위한 빠르고 아름다운 웹 앱
+- **[Snowflake Cortex AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/overview)** - LLM 함수 및 AI 서비스
+- **[Cortex Search](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-search)** - 시맨틱 검색 서비스
+- **[Cortex Analyst](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst)** - 자연어를 SQL로 변환
+- **[Cortex Agents](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents)** - 자율 AI 에이전트
+- **[TruLens](https://www.trulens.org/)** - LLM 평가 및 관측 가능성
 
-## 📚 Resources
+## 📚 리소스
 
-### Official Documentation
-- [Streamlit Documentation](https://docs.streamlit.io/)
-- [Streamlit Cheat Sheet](https://docs.streamlit.io/library/cheatsheet)
+### 공식 문서
+- [Streamlit 문서](https://docs.streamlit.io/)
+- [Streamlit 치트 시트](https://docs.streamlit.io/library/cheatsheet)
 - [Snowflake Cortex AI](https://docs.snowflake.com/en/user-guide/snowflake-cortex/overview)
-- [Cortex Agents Guide](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents)
-- [TruLens Documentation](https://www.trulens.org/trulens_eval/getting_started/)
+- [Cortex Agents 가이드](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents)
+- [TruLens 문서](https://www.trulens.org/trulens_eval/getting_started/)
 
-### Community
-- [Streamlit Gallery](https://streamlit.io/gallery) - Inspiration and templates
-- [Streamlit Community Forum](https://discuss.streamlit.io/) - Ask questions
-- [Snowflake Community](https://community.snowflake.com/) - Connect with others
+### 커뮤니티
+- [Streamlit 갤러리](https://streamlit.io/gallery) - 영감 및 템플릿
+- [Streamlit 커뮤니티 포럼](https://discuss.streamlit.io/) - 질문하기
+- [Snowflake 커뮤니티](https://community.snowflake.com/) - 다른 사람들과 소통하기
 
-## 🤝 Contributing
+## 🤝 기여하기
 
-Found an issue? Contributions are welcome!
+문제를 발견하셨나요? 기여는 언제나 환영합니다!
 
-1. Fork this repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Make your changes
-4. Submit a pull request
+1. 이 저장소 포크하기
+2. 기능 브랜치 생성 (`git checkout -b feature/improvement`)
+3. 변경 사항 적용
+4. 풀 리퀘스트 제출
 
 ---
 
-# Ready to start?
+# 시작할 준비가 되셨나요?
 
-1. 🔧 **[Set up your connection](md/day1.md)** - Configure Snowflake
-2. 🚀 **[Begin Day 1](app/day1.py)** - Build your first app
-3. 🎉 **Share your progress** on social with **#30DaysOfAI**
+1. 🔧 **[연결 설정하기](md/day1.md)** - Snowflake 구성
+2. 🚀 **[Day 1 시작하기](app/day1.py)** - 첫 번째 앱 만들기
+3. 🎉 **진행 상황 공유하기** 소셜 미디어에 **#30DaysOfAI** 태그와 함께
 
-**Have questions?** Open an issue or join the [Streamlit Community Forum](https://discuss.streamlit.io/).
+**질문이 있으신가요?** 이슈를 열거나 [Streamlit 커뮤니티 포럼](https://discuss.streamlit.io/)에 참여하세요.
