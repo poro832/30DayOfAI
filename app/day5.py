@@ -5,55 +5,44 @@ import streamlit as st
 import json
 from snowflake.snowpark.functions import ai_complete
 
-# Connect to Snowflake
+# Snowflake 연결
 try:
-    # Works in Streamlit in Snowflake
     from snowflake.snowpark.context import get_active_session
     session = get_active_session()
 except:
-    # Works locally and on Streamlit Community Cloud
     from snowflake.snowpark import Session
     session = Session.builder.configs(st.secrets["connections"]["snowflake"]).create()
 
-# Cached LLM Function
+# LLM 호출 함수 (캐싱 적용됨)
 @st.cache_data
 def call_cortex_llm(prompt_text):
-    """Makes a call to Cortex AI with the given prompt."""
     model = "claude-3-5-sonnet"
     df = session.range(1).select(
         ai_complete(model=model, prompt=prompt_text).alias("response")
     )
-    
-    # Get and parse response
     response_raw = df.collect()[0][0]
-    response_json = json.loads(response_raw)
-    return response_json
+    return json.loads(response_raw)
 
 # --- App UI ---
-st.title(":material/post: LinkedIn Post Generator")
+st.title(":material/post: LinkedIn 게시물 생성기")
 
-# Input widgets
-content = st.text_input("Content URL:", "https://docs.snowflake.com/en/user-guide/views-semantic/overview")
-tone = st.selectbox("Tone:", ["Professional", "Casual", "Funny"])
-word_count = st.slider("Approximate word count:", 50, 300, 100)
+# 입력 위젯
+content = st.text_input("콘텐츠 URL:", "https://docs.snowflake.com/en/user-guide/views-semantic/overview")
+tone = st.selectbox("어조 (Tone):", ["Professional", "Casual", "Funny"])
+word_count = st.slider("단어 수:", 50, 300, 100)
 
-# Generate button
 if st.button("Generate Post"):
-    # Construct the prompt
-    prompt = f"""
-    You are an expert social media manager. Generate a LinkedIn post based on the following:
-
-    Tone: {tone}
-    Desired Length: Approximately {word_count} words
-    Use content from this URL: {content}
-
-    Generate only the LinkedIn post text. Use dash for bullet points.
-    """
+    # [실습] f-string을 사용하여 tone, word_count, content 변수가 포함된 프롬프트를 작성하세요.
     
-    response = call_cortex_llm(prompt)
-    st.subheader("Generated Post:")
-    st.markdown(response)
+    # 여기에 코드를 작성하세요
+    prompt = "..."
+    
+    st.info("코드를 완성하고 실행하세요.") # 실습 안내
+    
+    # 실행 결과 확인 (작성 후 주석 해제)
+    # response = call_cortex_llm(prompt)
+    # st.subheader("Generated Post:")
+    # st.markdown(response)
 
-# Footer
 st.divider()
 st.caption("Day 5: Build a Post Generator App | 30 Days of AI")

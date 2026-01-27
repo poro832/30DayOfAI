@@ -1,0 +1,26 @@
+move day1.md Day1\
+move day2.md Day1\
+move day3.md Day1\
+move day4.md Day1\
+move day5.md Day1\
+move day6.md Day1\
+move day7.md Day1\
+move day8.md Day1\
+move day9.md Day1\
+move day10.md Day1\
+move day11.md Day2\
+move day12.md Day2\
+move day13.md Day2\
+move day14.md Day2\
+move day15.md Day2\
+move day16.md Day2\
+move day17.md Day2\
+move day18.md Day2\
+move day19.md Day2\
+move day20.md Day2\
+move day21.md Day2\
+move day22.md Day2\
+move day23.md Day3\
+move day24.md Day3\
+move day25.md Day3\
+exit

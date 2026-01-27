@@ -2,87 +2,45 @@
 # Streaming Responses
 
 import streamlit as st
-import json
-from snowflake.snowpark.functions import ai_complete
 import time
+# Snowflake 연결 생략 (이전 Day와 동일하다고 가정)
 
-# Connect to Snowflake
-try:
-    # Works in Streamlit in Snowflake
-    from snowflake.snowpark.context import get_active_session
-    session = get_active_session()
-except:
-    # Works locally and on Streamlit Community Cloud
-    from snowflake.snowpark import Session
-    session = Session.builder.configs(st.secrets["connections"]["snowflake"]).create()
+def call_llm_dummy(prompt):
+    return "This is a simulated streaming response from Snowflake Cortex."
 
-def call_llm(prompt_text: str) -> str:
-    """Call Snowflake Cortex LLM."""
-    df = session.range(1).select(
-        ai_complete(model="claude-3-5-sonnet", prompt=prompt_text).alias("response")
-    )
-    response_raw = df.collect()[0][0]
-    response_json = json.loads(response_raw)
-    if isinstance(response_json, dict):
-        return response_json.get("choices", [{}])[0].get("messages", "")
-    return str(response_json)
+st.title(":material/chat: 스트리밍 챗봇")
 
-st.title(":material/chat: Chatbot with Streaming")
-
-# Initialize messages
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "assistant", "content": "Hello! I'm your AI assistant. How can I help you today?"}
-    ]
+    st.session_state.messages = []
 
-# Sidebar to show conversation stats
-with st.sidebar:
-    st.header("Conversation Stats")
-    user_msgs = len([m for m in st.session_state.messages if m["role"] == "user"])
-    assistant_msgs = len([m for m in st.session_state.messages if m["role"] == "assistant"])
-    st.metric("Your Messages", user_msgs)
-    st.metric("AI Responses", assistant_msgs)
-    
-    if st.button("Clear History"):
-        st.session_state.messages = [
-            {"role": "assistant", "content": "Hello! I'm your AI assistant. How can I help you today?"}
-        ]
-        st.rerun()
-
-# Display all messages from history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+        st.write(message["content"])
 
-# Chat input
-if prompt := st.chat_input("Type your message..."):
-    # Add and display user message
+if prompt := st.chat_input("..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.write(prompt)
+
+    # [실습] 제너레이터(Generator) 함수를 만들어 타자 치는 효과(Streaming)를 구현하세요.
+    # 힌트: yield와 time.sleep() 사용
     
-    # Build the full conversation history for context
-    conversation = "\n\n".join([
-        f"{'User' if msg['role'] == 'user' else 'Assistant'}: {msg['content']}"
-        for msg in st.session_state.messages
-    ])
-    full_prompt = f"{conversation}\n\nAssistant:"
-    
-    # Generate stream
+    # 여기에 함수를 작성하세요: def stream_generator(): ...
     def stream_generator():
-        response_text = call_llm(full_prompt)
-        for word in response_text.split(" "):
-            yield word + " "
-            time.sleep(0.02)
+        yield "실습 "
+        time.sleep(0.1)
+        yield "코드가 "
+        time.sleep(0.1)
+        yield "필요합니다."
     
-    # Display assistant response with streaming
     with st.chat_message("assistant"):
-        with st.spinner("Processing"):
-            response = st.write_stream(stream_generator)
-    
-    # Add assistant response to state
+        # [실습] st.write_stream을 사용하여 제너레이터 출력을 화면에 그리세요.
+        
+        # 여기에 코드를 작성하세요
+        st.write("실습 진행 필요")
+        response = "..."
+        
     st.session_state.messages.append({"role": "assistant", "content": response})
-    st.rerun()  # Force rerun to update sidebar stats
 
 st.divider()
 st.caption("Day 12: Streaming Responses | 30 Days of AI")

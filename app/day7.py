@@ -3,85 +3,45 @@
 
 import streamlit as st
 import json
-import time
 from snowflake.snowpark.functions import ai_complete
 
-# Connect to Snowflake
+# Snowflake 연결
 try:
-    # Works in Streamlit in Snowflake
     from snowflake.snowpark.context import get_active_session
     session = get_active_session()
 except:
-    # Works locally and on Streamlit Community Cloud
     from snowflake.snowpark import Session
     session = Session.builder.configs(st.secrets["connections"]["snowflake"]).create()
 
-# Cached LLM Function
 @st.cache_data
 def call_cortex_llm(prompt_text):
-    """Makes a call to Cortex AI with the given prompt."""
     model = "claude-3-5-sonnet"
     df = session.range(1).select(
         ai_complete(model=model, prompt=prompt_text).alias("response")
     )
-    
-    # Get and parse response
-    response_raw = df.collect()[0][0]
-    response_json = json.loads(response_raw)
-    return response_json
+    return json.loads(df.collect()[0][0])
 
 # --- App UI ---
 
-# Input widgets
-st.subheader(":material/input: Input content")
-content = st.text_input("Content URL:", "https://docs.snowflake.com/en/user-guide/views-semantic/overview")
+# 메인 영역 입력 위젯
+st.subheader(":material/input: 입력 콘텐츠")
+content = st.text_input("콘텐츠 URL:", "https://docs.snowflake.com/en/user-guide/views-semantic/overview")
 
-with st.sidebar:
-    st.title(":material/post: LinkedIn Post Generator v3")
-    st.success("An app for generating LinkedIn post using content from input link.")
-    tone = st.selectbox("Tone:", ["Professional", "Casual", "Funny"])
-    word_count = st.slider("Approximate word count:", 50, 300, 100)
+# [실습] st.sidebar를 사용하여 부가적인 설정(Tone, Word count)과 생성 버튼을 사이드바로 옮기세요.
+# 여기에 코드를 작성하세요
+# with st.sidebar:
+#     ...
 
-# Generate button
-if st.button("Generate Post"):
-    
-    # Initialize the status container
-    with st.status("Starting engine...", expanded=True) as status:
-        
-        # Step 1: Construct Prompt
-        st.write(":material/psychology: Thinking: Analyzing constraints and tone...")
+st.info("사이드바 코드를 작성하세요.")
 
-        # Add a slight delay
-        time.sleep(2)
-        
-        prompt = f"""
-        You are an expert social media manager. Generate a LinkedIn post based on the following:
+# 편의상 실습 전 기본 변수 설정 (에러 방지용)
+if 'tone' not in locals(): tone = "Professional"
+if 'word_count' not in locals(): word_count = 100
 
-        Tone: {tone}
-        Desired Length: Approximately {word_count} words
-        Use content from this URL: {content}
+# 결과 출력 (사이드바 버튼 클릭 시 로직에 따라 수정 필요할 수 있음)
+if "result" in st.session_state:
+    st.subheader("Generated Post:")
+    st.markdown(st.session_state.result)
 
-        Generate only the LinkedIn post text. Use dash for bullet points.
-        """
-        
-        # Step 2: Call API
-        st.write(":material/flash_on: Generating: contacting Snowflake Cortex...")
-
-        # Add a slight delay
-        time.sleep(2)
-        
-        # This is the blocking call that takes time
-        response = call_cortex_llm(prompt)
-        
-        # Step 3: Update Status to Complete
-        st.write(":material/check_circle: Post generation completed!")
-        status.update(label="Post Generated Successfully!", state="complete", expanded=False)
-
-    # Display Result
-    with st.container(border=True):
-        st.subheader(":material/output: Generated post:")
-        st.markdown(response)
-
-# Footer
 st.divider()
 st.caption("Day 7: Theming and Layout | 30 Days of AI")
