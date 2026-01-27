@@ -208,3 +208,24 @@ Type: full_review | Chunk: 15
 - 정확한 키워드 "따뜻한 열 장갑"이 없어도 의미적으로 관련된 리뷰를 찾음
 - 각 결과에 파일명, 타입, 청크 ID 표시
 - 관련성 점수로 결과 순위 결정
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+Cortex Search 서비스 객체의 `.search()` 메서드를 사용하여 의미 기반 검색을 수행해 봅니다.
+
+1. `svc.search()` 메서드를 호출하세요.
+2. `query`, `columns`, `limit` 인자를 적절하게 전달하세요.
+3. 결과는 `results` 변수에 저장하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# Cortex Search 조회 실습
+results = svc.search(
+    query=query,
+    columns=["CHUNK_TEXT", "FILE_NAME", "CHUNK_TYPE", "CHUNK_ID"],
+    limit=num_results
+)
+```

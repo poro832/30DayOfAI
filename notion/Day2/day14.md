@@ -74,3 +74,30 @@ if debug_mode:
 # 👏 축하합니다! Part 1 (Basic App Building) 완료
 
 여기까지 Day 14를 완료하셨습니다. 이제 여러분은 Streamlit으로 **기본적인 UI**를 만들고, **Snowflake Cortex LLM**을 연동하여, **대화형 챗봇**을 구축할 수 있는 능력을 갖추었습니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+아바타 설정과 안정적인 에러 처리를 통해 앱의 완성도를 높여 봅니다.
+
+1. `st.chat_message` 호출 시 `avatar` 파라미터에 원하는 이모지(예: 🤖, 🧑‍💻)를 넣어보세요.
+2. LLM 호출 부분을 `try-except` 블록으로 감싸서 에러 발생 시 `st.error`로 안내 메시지를 출력하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 아바타 및 에러 처리 실습
+try:
+    # 1. 아바타가 있는 사용자 메시지
+    with st.chat_message("user", avatar="🧑‍💻"):
+        st.write(prompt)
+    
+    # 2. 아바타가 있는 어시스턴트 메시지 + 에러 방어
+    with st.chat_message("assistant", avatar="🤖"):
+        response = call_llm(context)
+        st.write(response)
+        
+except Exception as e:
+    st.error(f"죄송합니다. 응답을 생성하는 중 오류가 발생했습니다: {e}")
+```

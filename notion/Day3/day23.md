@@ -113,3 +113,23 @@ run.compute_metrics(["answer_relevance", "context_relevance", "groundedness"])
 - 앱에서 "Run TruLens Evaluation" 버튼을 클릭하면 평가가 시작됩니다.
 - 각 질문에 대한 처리 과정과 답변이 생성됩니다.
 - 평가 완료 후 Snowsight(웹 콘솔)의 **AI & ML -> Evaluations** 메뉴에서 상세한 리포트와 점수를 확인할 수 있습니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+TruLens를 사용하여 계측된 RAG 애플리케이션의 평가 실행을 추가하고 시작해 봅니다.
+
+1. `add_run` 메서드를 사용하여 앱에 새로운 실행(Run)을 등록하세요.
+2. `start()` 메서드를 호출하여 실제 평가 프로세스를 시작하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# TruLens 평가 실행 실습
+# 1. 실행 구성(run_config)을 사용하여 실행 추가
+run = tru_rag.add_run(run_config=run_config)
+
+# 2. 평가 시작
+run.start()
+```

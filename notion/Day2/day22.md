@@ -120,3 +120,37 @@ QUESTION: {prompt}
 
 - 사용자는 채팅 창을 통해 자연스럽게 연속적인 질문을 할 수 있습니다.
 - 봇은 검색된 리뷰 데이터에 기반해서만 답변하며, 출처를 함께 제공합니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+문서 검색 로직을 별도의 함수로 모듈화하여 챗봇에서 호출할 수 있게 만들어 봅니다.
+
+1. `svc.search()` 메서드를 사용하여 쿼리를 실행하세요.
+2. 결과에서 `CHUNK_TEXT`와 `FILE_NAME` 컬럼을 가져오도록 설정하세요.
+3. 검색 결과를 `chunks_data` 리스트 형식으로 반환하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 문서 검색 함수 구현 실습
+def search_documents(query, service_path, limit):
+    # ... (Root 및 서비스 연결 코드 생략) ...
+    
+    # 1. Cortex Search 실행
+    results = svc.search(
+        query=query, 
+        columns=["CHUNK_TEXT", "FILE_NAME"], 
+        limit=limit
+    )
+    
+    # 2. 데이터 추출 및 반환
+    chunks_data = []
+    for item in results.results:
+        chunks_data.append({
+            "text": item.get("CHUNK_TEXT", ""),
+            "source": item.get("FILE_NAME", "Unknown")
+        })
+    return chunks_data
+```

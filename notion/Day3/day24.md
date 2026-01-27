@@ -91,3 +91,23 @@ result = session.sql(sql_query).collect()
 
 - 사용자가 이미지를 업로드하고 분석 유형을 선택하면, AI가 이미지를 "보고" 답변합니다.
 - 예: 식당 메뉴판 사진을 올리고 텍스트 추출을 요청하면 메뉴 항목들을 텍스트로 반환합니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+Snowflake Cortex의 비전 기능을 활용하여 이미지를 분석하는 SQL 쿼리를 실행해 봅니다.
+
+1. `session.sql()`을 사용하여 작성된 `sql_query`를 실행하세요.
+2. 실행 결과(`collect`)에서 첫 번째 행의 `ANALYSIS` 컬럼 값을 추출하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 이미지 분석 실행 실습
+# 1. SQL 쿼리 실행
+result = session.sql(sql_query).collect()
+
+# 2. 결과 추출 (첫 번째 행의 ANALYSIS 컬럼)
+response = result[0]['ANALYSIS']
+```

@@ -1,12 +1,12 @@
-For today's challenge, our goal is to build a complete image analysis application using Snowflake's `AI_COMPLETE` function with vision-capable models. Users can upload images within a bordered container and get AI-powered analysis displayed in a separate results container, including descriptions, OCR, object identification, chart analysis, or custom queries.
+이번 챌린지에서는 비전(vision) 기능이 있는 모델과 Snowflake의 `AI_COMPLETE` 함수를 사용하여 완전한 이미지 분석 애플리케이션을 구축하는 작업을 수행합니다. 사용자는 테두리가 있는 컨테이너 내에서 이미지를 업로드하고, 별도의 결과 컨테이너에서 설명, OCR(문자 인식), 객체 식별, 차트 분석 또는 커스텀 쿼리를 포함한 AI 기반 분석 결과를 확인할 수 있습니다.
 
 ---
 
-### :material/settings: How It Works: Step-by-Step
+### :material/settings: 작동 방식: 단계별 설명
 
-Let's break down what each part of the code does.
+코드의 각 부분이 어떤 역할을 하는지 살펴보겠습니다.
 
-#### 1. Session State Initialization
+#### 1. 세션 상태 초기화
 
 ```python
 # Initialize state
@@ -21,12 +21,12 @@ full_stage_name = f"{database}.{schema}.IMAGE_ANALYSIS"
 stage_name = f"@{full_stage_name}"
 ```
 
-* **Configurable location**: Database and schema can be changed in sidebar settings
-* **Stage naming**: Follows pattern `DATABASE.SCHEMA.IMAGE_ANALYSIS`
-* **Stage reference**: Uses `@` prefix for Snowflake stage path
-* **Persistent state**: Configuration survives across reruns
+* **구성 가능한 위치**: 사이드바 설정에서 데이터베이스와 스키마를 변경할 수 있습니다.
+* **스테이지 명명**: `DATABASE.SCHEMA.IMAGE_ANALYSIS` 패턴을 따릅니다.
+* **스테이지 참조**: Snowflake 스테이지 경로에 대해 `@` 접두사를 사용합니다.
+* **지속 가능한 상태**: 구성 정보가 재실행 시에도 유지됩니다.
 
-#### 2. Sidebar Configuration
+#### 2. 사이드바 구성
 
 ```python
 with st.sidebar:
@@ -45,12 +45,12 @@ with st.sidebar:
     )
 ```
 
-* **Material icons**: Modern UI with `:material/settings:`
-* **Collapsible settings**: Database config in expander
-* **Model dropdown**: Vision-capable models including Claude, OpenAI, and Pixtral
-* **Dynamic updates**: Changes trigger `st.rerun()` to update stage paths
+* **Material 아이콘**: `:material/settings:`를 사용하여 현대적인 UI를 구현합니다.
+* **접이식 설정**: 데이터베이스 구성을 익스팬더에 배치합니다.
+* **모델 드롭다운**: Claude, OpenAI, Pixtral을 포함한 비전 기능 모델들입니다.
+* **동적 업데이트**: 변경 사항은 `st.rerun()`을 트리거하여 스테이지 경로를 업데이트합니다.
 
-#### 3. Stage Configuration with Server-Side Encryption
+#### 3. 서버 측 암호화가 적용된 스테이지 구성
 
 ```python
 # Create stage with server-side encryption (required for AI_COMPLETE)
@@ -61,13 +61,13 @@ CREATE STAGE {full_stage_name}
 """).collect()
 ```
 
-* **Server-side encryption**: `SNOWFLAKE_SSE` is **required** for `AI_COMPLETE` with images
-* **Client-side encryption**: Not supported for vision models
-* **Directory table**: Enabled for file tracking
-* **Auto-recreation**: Stage is dropped and recreated if it exists to ensure correct encryption
-* **Status display**: Shows success/error with material icons in sidebar
+* **서버 측 암호화**: 이미지를 사용하는 `AI_COMPLETE`에는 `SNOWFLAKE_SSE`가 **필수**입니다.
+* **클라이언트 측 암호화**: 비전 모델에서는 지원되지 않습니다.
+* **디렉토리 테이블**: 파일 추적을 위해 활성화됩니다.
+* **자동 재생성**: 올바른 암호화를 보장하기 위해 스테이지가 존재하는 경우 삭제 후 다시 생성합니다.
+* **상태 표시**: 사이드바에 Material 아이콘과 함께 성공/오류를 표시합니다.
 
-#### 4. Upload Container with Bordered UI
+#### 4. 테두리가 있는 UI의 업로드 컨테이너
 
 ```python
 with st.container(border=True):
@@ -79,12 +79,12 @@ with st.container(border=True):
     )
 ```
 
-* **Bordered container**: Clean visual separation for upload section
-* **Material icon header**: `:material/upload:` for modern look
-* **File type restriction**: Only image formats supported by vision models
-* **Help text**: Inline guidance for users
+* **테두리가 있는 컨테이너**: 업로드 섹션에 대한 깨끗한 시각적 구분을 제공합니다.
+* **Material 아이콘 헤더**: 현대적인 느낌을 위해 `:material/upload:`를 사용합니다.
+* **파일 유형 제한**: 비전 모델에서 지원하는 이미지 형식만 허용합니다.
+* **도움말 텍스트**: 사용자를 위한 인라인 안내를 제공합니다.
 
-#### 5. Image Preview and File Information
+#### 5. 이미지 미리보기 및 파일 정보
 
 ```python
 if uploaded_file:
@@ -108,12 +108,12 @@ if uploaded_file:
         st.write(f"**Size:** {size_display}")
 ```
 
-* **Two-column layout**: Image preview on left, metadata on right
-* **Responsive image**: `use_container_width=True` for proper scaling
-* **Smart file size display**: Automatically formats as bytes, KB, or MB
-* **User feedback**: Clear display of what was uploaded
+* **2컬럼 레이아웃**: 왼쪽에 이미지 미리보기, 오른쪽에 메타데이터를 배치합니다.
+* **반응형 이미지**: 적절한 스케일링을 위해 `use_container_width=True`를 사용합니다.
+* **스마트한 파일 크기 표시**: 바이트, KB 또는 MB로 자동 포맷팅합니다.
+* **사용자 피드백**: 업로드된 내용에 대한 명확한 표시를 제공합니다.
 
-#### 6. Analysis Type Selection
+#### 6. 분석 유형 선택
 
 ```python
 # Analysis type selection (full width, above button)
@@ -135,12 +135,12 @@ if analysis_type == "Custom prompt":
     )
 ```
 
-* **Full-width placement**: Outside columns, above the analyze button
-* **Predefined prompts**: Common use cases with optimized prompts
-* **Custom option**: Users can ask anything about the image
-* **Conditional input**: Text area appears only for custom prompts
+* **전체 너비 배치**: 컬럼 밖에 위치하며 분석 버튼 위에 배치합니다.
+* **사전 정의된 프롬프트**: 최적화된 프롬프트와 함께 일반적인 사용 사례를 제공합니다.
+* **커스텀 옵션**: 사용자가 이미지에 대해 무엇이든 질문할 수 있습니다.
+* **조건부 입력**: 커스텀 프롬프트인 경우에만 텍스트 영역이 나타납니다.
 
-#### 7. Upload Image to Snowflake Stage
+#### 7. Snowflake 스테이지에 이미지 업로드
 
 ```python
 # Create unique filename
@@ -160,13 +160,13 @@ session.file.put_stream(
 )
 ```
 
-* **Unique naming**: Timestamp-based filenames prevent collisions
-* **Preserve extension**: Keeps original format (`.jpg`, `.png`, etc.)
-* **`BytesIO` wrapper**: Wraps bytes in file-like object for `put_stream`
-* **No compression**: `auto_compress=False` keeps images as-is
-* **Spinner feedback**: `:material/upload:` spinner shows upload progress
+* **고유 명명**: 타임스탬프 기반 파일명으로 충돌을 방지합니다.
+* **확장자 보존**: 원본 형식(`.jpg`, `.png` 등)을 유지합니다.
+* **`BytesIO` 래퍼**: `put_stream`을 위해 바이트를 파일 형태 객체로 래핑합니다.
+* **압축 안 함**: `auto_compress=False`를 통해 이미지를 있는 그대로 유지합니다.
+* **업로드 피드백**: `:material/upload:` 스피너가 업로드 진행 상황을 보여줍니다.
 
-#### 8. Image Analysis with AI_COMPLETE
+#### 8. AI_COMPLETE를 사용한 이미지 분석
 
 ```python
 # Use AI_COMPLETE with TO_FILE syntax
@@ -188,14 +188,14 @@ st.session_state.analysis_prompt = prompt
 st.session_state.analysis_stage = stage_name
 ```
 
-* **`AI_COMPLETE` syntax**: `AI_COMPLETE(model, prompt, file_reference)`
-* **`TO_FILE()`**: References staged file for the vision model
-* **Three arguments**: Model name, text prompt, image file reference
-* **SQL escaping**: Single quotes in prompt are doubled (`''`)
-* **Session state storage**: Persists results for display in separate container
-* **Spinner feedback**: `:material/psychology:` spinner shows AI is analyzing
+* **`AI_COMPLETE` 구문**: `AI_COMPLETE(model, prompt, file_reference)`
+* **`TO_FILE()`**: 비전 모델을 위해 스테이징된 파일을 참조합니다.
+* **3개 인자**: 모델 이름, 텍스트 프롬프트, 이미지 파일 참조입니다.
+* **SQL 이스케이프**: 프롬프트 내의 작은따옴표를 중첩(`''`) 처리합니다.
+* **세션 상태 저장**: 별도의 컨테이너에 표시하기 위해 결과를 유지합니다.
+* **분석 피드백**: `:material/psychology:` 스피너가 AI가 분석 중임을 보여줍니다.
 
-This follows the [official Snowflake syntax](https://docs.snowflake.com/en/sql-reference/functions/ai_complete-single-file):
+이것은 [Snowflake 공식 문서의 구문](https://docs.snowflake.com/en/sql-reference/functions/ai_complete-single-file)을 따릅니다:
 
 ```sql
 AI_COMPLETE(
@@ -203,7 +203,7 @@ AI_COMPLETE(
 )
 ```
 
-#### 9. Results Display in Separate Container
+#### 9. 별도 컨테이너에 결과 표시
 
 ```python
 # Display results in a separate bordered container
@@ -218,14 +218,14 @@ if "analysis_response" in st.session_state:
             st.write(f"**Stage:** {st.session_state.analysis_stage}")
 ```
 
-* **Separate container**: Results appear in new bordered container below upload section
-* **Session state driven**: Container only appears after analysis completes
-* **Material icons**: `:material/auto_awesome:` for results, `:material/info:` for details
-* **Markdown rendering**: Supports formatted model responses
-* **Expandable details**: Technical info hidden by default
-* **Persistent display**: Results remain visible across reruns
+* **별도 컨테이너**: 결과는 업로드 섹션 아래의 새로운 테두리 컨테이너에 나타납니다.
+* **세션 상태 기반**: 분석이 완료된 후에만 컨테이너가 나타납니다.
+* **Material 아이콘**: 결과에는 `:material/auto_awesome:`, 상세 정보에는 `:material/info:`를 사용합니다.
+* **마크다운 렌더링**: 포맷팅된 모델 응답을 지원합니다.
+* **확장 가능한 상세 정보**: 기술 정보는 기본적으로 숨겨져 있습니다.
+* **지속적인 표시**: 결과가 재실행 시에도 계속 표시됩니다.
 
-#### 10. Helper Information Section
+#### 10. 도움말 섹션
 
 ```python
 # Info section when no file is uploaded
@@ -240,84 +240,84 @@ if not uploaded_file:
         st.markdown("- Analyze charts\n- Understand layouts\n- Describe art style")
 ```
 
-* **Conditional display**: Only shows when no file is uploaded
-* **Material icons**: `:material/arrow_upward:` and `:material/lightbulb:`
-* **Use case examples**: Helps users understand capabilities
-* **Two-column layout**: Organized presentation of features
+* **조건부 표시**: 업로드된 파일이 없을 때만 나타납니다.
+* **Material 아이콘**: `:material/arrow_upward:`와 `:material/lightbulb:`를 사용합니다.
+* **사용 사례 예시**: 사용자가 기능을 이해하도록 돕습니다.
+* **2컬럼 레이아웃**: 기능을 체계적으로 제시합니다.
 
 ---
 
-### :material/adjust: Key Features
+### :material/adjust: 주요 기능
 
-| Feature | Implementation |
+| 기능 | 구현 방식 |
 |---------|----------------|
-| **Bordered Containers** | Upload and results in separate bordered sections |
-| **Material Icons** | Modern UI throughout (no emojis) |
-| **Smart File Size** | Auto-formats as bytes, KB, or MB |
-| **Session State** | Results persist in separate container |
-| **Image Upload** | `st.file_uploader` with type restrictions |
-| **Stage Upload** | `session.file.put_stream()` with unique naming |
-| **Vision Analysis** | `AI_COMPLETE` with `TO_FILE()` syntax |
-| **Multiple Models** | Claude, OpenAI GPT-4, OpenAI O4, Pixtral |
-| **Analysis Types** | Description, OCR, objects, charts, custom |
-| **Server-Side Encryption** | Required for AI_COMPLETE with images |
-| **File Management** | Staged files persist (manual cleanup via SQL) |
+| **테두리 컨테이너** | 업로드와 결과를 별도의 테두리 섹션에 배치 |
+| **Material 아이콘** | 전체적으로 현대적인 UI 적용 (이모지 대신 사용) |
+| **스마트 파일 크기** | 바이트, KB 또는 MB로 자동 포맷팅 |
+| **세션 상태** | 결과를 별도의 컨테이너에 유지 |
+| **이미지 업로드** | 유형 제한이 있는 `st.file_uploader` 사용 |
+| **스테이지 업로드** | 고유 명칭을 사용한 `session.file.put_stream()` 적용 |
+| **비전 분석** | `TO_FILE()` 구문을 사용한 `AI_COMPLETE` 호출 |
+| **다양한 모델** | Claude, OpenAI GPT-4, OpenAI O4, Pixtral |
+| **분석 유형** | 설명, OCR, 객체, 차트, 커스텀 |
+| **서버 측 암호화** | 이미지 기반 AI_COMPLETE에 필수 사항임 |
+| **파일 관리** | 스테이징된 파일은 유지됨 (SQL을 통한 수동 정리 가능) |
 
 ---
 
-### :material/library_books: Key Technical Concepts
+### :material/library_books: 주요 기술 개념
 
-**Supported Vision Models:**
-- `claude-3-5-sonnet` - Claude's latest vision model
-- `openai-gpt-4.1` - OpenAI's GPT-4 with vision
-- `openai-o4-mini` - OpenAI's efficient vision model
-- `pixtral-large` - Mistral's vision model
+**지원되는 비전 모델:**
+- `claude-3-5-sonnet` - Claude의 최신 비전 모델
+- `openai-gpt-4.1` - 비전 기능을 지원하는 OpenAI의 GPT-4
+- `openai-o4-mini` - OpenAI의 효율적인 비전 모델
+- `pixtral-large` - Mistral의 비전 모델
 
-According to the [Snowflake AI_COMPLETE documentation](https://docs.snowflake.com/en/sql-reference/functions/ai_complete-single-file), additional supported models include:
+[Snowflake AI_COMPLETE 문서](https://docs.snowflake.com/en/sql-reference/functions/ai_complete-single-file)에 따르면 추가로 지원되는 모델은 다음과 같습니다:
 - `claude-4-opus`, `claude-4-sonnet`, `claude-3-7-sonnet`
 - `llama4-maverick`, `llama4-scout`
 
-**Supported Image Formats:**
+**지원되는 이미지 형식:**
 - `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`
-- `.bmp` (Pixtral and Llama4 models only)
+- `.bmp` (Pixtral 및 Llama4 모델만 해당)
 
-**Image Size Limits:**
-- Most models: 10 MB maximum
-- Claude models: 3.75 MB maximum, 8000x8000 max resolution
+**이미지 크기 제한:**
+- 대부분의 모델: 최대 10 MB
+- Claude 모델: 최대 3.75 MB, 최대 해상도 8000x8000
 
-**Stage Requirements:**
-- :material/check_circle: Server-side encryption (`SNOWFLAKE_SSE`)
-- :material/check_circle: Directory table enabled
-- :material/cancel: Client-side encryption not supported
+**스테이지 요구 사항:**
+- :material/check_circle: 서버 측 암호화 (`SNOWFLAKE_SSE`)
+- :material/check_circle: 디렉토리 테이블 활성화
+- :material/cancel: 클라이언트 측 암호화는 지원되지 않음
 
-**Analysis Types:**
+**분석 유형:**
 
-| Type | Use Case | Example Prompt |
+| 유형 | 사용 사례 | 예시 프롬프트 |
 |------|----------|----------------|
-| **General Description** | Quick overview | "Describe this image in detail" |
-| **OCR** | Extract text | "Extract all text visible in this image" |
-| **Object Identification** | List items | "List all objects you can identify" |
-| **Chart Analysis** | Data insights | "Analyze this chart, describe trends" |
-| **Custom** | Any question | User-defined prompt |
+| **General Description** | 빠른 개요 파악 | "이 이미지를 상세히 설명해 주세요" |
+| **OCR** | 텍스트 추출 | "이 이미지에 보이는 모든 텍스트를 추출해 주세요" |
+| **Identify Objects** | 항목 나열 | "식별할 수 있는 모든 객체를 나열해 주세요" |
+| **Analyze Chart/Graph** | 데이터 인사이트 | "이 차트를 분석하고 추세를 설명해 주세요" |
+| **Custom** | 모든 질문 | 사용자가 직접 정의한 프롬프트 |
 
-**UI Architecture:**
+**UI 아키텍처:**
 
-1. **Container 1 (Upload)**: File uploader, image preview, analysis type, analyze button
-2. **Container 2 (Results)**: Analysis result and technical details (appears after processing)
-3. **Helper Section**: Tips and capabilities (when no file uploaded)
+1. **컨테이너 1 (업로드)**: 파일 업로더, 이미지 미리보기, 분석 유형, 분석 버튼
+2. **컨테이너 2 (결과)**: 분석 결과 및 기술적 상세 정보 (프로세싱 후 나타남)
+3. **도움말 섹션**: 팁 및 기능 설명 (파일이 업로드되지 않았을 때)
 
-**Processing Flow:**
-1. User uploads image in bordered container
-2. Image bytes → `BytesIO` stream
-3. Upload to Snowflake stage with unique name
-4. Call `AI_COMPLETE` with `TO_FILE()` reference
-5. Store results in session state
-6. Display results in separate bordered container
-7. Staged files persist (can be cleaned manually via SQL if needed)
+**프로세싱 흐름:**
+1. 사용자가 테두리가 있는 컨테이너 내에서 이미지 업로드
+2. 이미지 바이트 → `BytesIO` 스트림 변환
+3. 고유한 이름을 사용하여 Snowflake 스테이지에 업로드
+4. `TO_FILE()` 참조를 사용하여 `AI_COMPLETE` 호출
+5. 결과를 세션 상태에 저장
+6. 별도의 테두리 컨테이너에 결과 표시
+7. 스테이징된 파일은 유지됨 (필요시 SQL을 통해 수동으로 정리 가능)
 
 ---
 
-### :material/library_books: Resources
+### :material/library_books: 리소스
 
 - [Snowflake AI_COMPLETE (Single File) Documentation](https://docs.snowflake.com/en/sql-reference/functions/ai_complete-single-file)
 - [Snowflake Cortex AI Functions](https://docs.snowflake.com/en/user-guide/snowflake-cortex/llm-functions)

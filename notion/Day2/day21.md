@@ -284,4 +284,29 @@ Streamlit 실행 코드 = python -m streamlit run 파일명.py
 - ✅ 임베딩 생성 (Day 18)
 - ✅ 검색 서비스 (Day 19)
 - ✅ 검색 쿼리 (Day 20)
+- ✅ 검색 쿼리 (Day 20)
 - ✅ RAG 답변 생성 (Day 21)
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+검색된 컨텍스트와 사용자의 질문을 결합하여 LLM에게 전달할 RAG 프롬프트를 작성해 봅니다.
+
+1. f-string을 사용하여 `context`와 `question`이 포함된 프롬프트를 만드세요.
+2. LLM이 제공된 컨텍스트**만**을 사용하여 답변하도록 지시사항을 포함하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# RAG 프롬프트 작성 실습
+rag_prompt = f"""당신은 유능한 어시스턴트입니다. 오직 아래 제공된 컨텍스트(CONTEXT)만을 바탕으로 사용자의 질문에 답하세요.
+만약 컨텍스트에 답변할 내용이 없다면, "제공된 문서에는 관련 정보가 없습니다."라고 답변하세요.
+
+[CONTEXT]
+{context}
+
+[USER QUESTION]
+{question}
+"""
+```

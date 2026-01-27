@@ -265,3 +265,35 @@ Streamlit 실행 코드 = python -m streamlit run 파일명.py
 - Snowflake의 `REVIEW_CHUNKS` 테이블에 저장
 - 각 청크는 적절한 크기로 임베딩 생성 준비 완료
 - Day 18에서 이 청크들을 벡터로 변환하여 의미 기반 검색 가능
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+긴 문서(리뷰)를 지정된 크기와 오버랩(중복)을 고려하여 여러 개의 청크로 나누는 로직을 완성해 봅니다.
+
+1. `range()` 함수를 사용하여 `chunk_size - overlap` 간격으로 반복하는 루프를 작성하세요.
+2. 각 구간의 단어들을 합쳐서(`join`) 하나의 텍스트 청크로 만드세요.
+3. 생성된 청크를 `chunks` 리스트에 저장하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 텍스트 청킹(Chunking) 로직 실습
+for i in range(0, len(words), chunk_size - overlap):
+    # 1. 단어 슬라이싱
+    chunk_words = words[i:i + chunk_size]
+    # 2. 단어들을 하나의 문자열로 결합
+    chunk_text = ' '.join(chunk_words)
+    
+    # 3. 청크 데이터 추가
+    chunks.append({
+        'doc_id': row['DOC_ID'],
+        'file_name': row['FILE_NAME'],
+        'chunk_id': chunk_id,
+        'chunk_text': chunk_text,
+        'chunk_size': len(chunk_words),
+        'chunk_type': 'chunked_review'
+    })
+    chunk_id += 1
+```

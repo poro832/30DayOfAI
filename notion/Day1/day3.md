@@ -103,3 +103,24 @@ if st.button("Generate"):
 
 - **`st.write_stream`**: Streamlit 1.31+ 버전부터 도입된 강력한 함수로, 제너레이터 객체만 넘겨주면 복잡한 UI 코드 없이도 채팅 같은 스트리밍 효과를 냅니다.
 - **`snowflake.cortex.Complete(..., stream=True)`**: `session.sql`을 쓰는 것보다 훨씬 파이썬 친화적이며, `stream=True` 옵션 하나로 스트리밍 객체를 받을 수 있습니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+이번 실습에서는 `Complete` 함수의 `stream=True` 옵션을 직접 구현해 봅니다.
+
+1. `Complete` 함수의 인자로 `stream=True`를 전달하여 스트리밍 객체를 생성하세요.
+2. `st.write_stream()` 함수를 사용하여 해당 객체를 화면에 출력하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# Direct (stream=True) 방식 구현
+with st.spinner(f"`{model}` 모델로 응답 생성 중..."):
+    # 1. 스트림 제너레이터 생성
+    stream_generator = Complete(model=model, prompt=prompt, session=session, stream=True)
+    
+    # 2. write_stream으로 출력
+    st.write_stream(stream_generator)
+```

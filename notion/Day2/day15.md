@@ -132,3 +132,21 @@
 Streamlit 실행 코드 = python -m streamlit run 파일명.py
 
 예시 : `python -m streamlit run app/day15.py`
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+Snowflake Cortex의 `ai_complete` 함수를 활용하여 모델의 응답을 생성하는 핵심 로직을 완성해 봅니다.
+
+1. `session.range(1)`과 `.select()`를 사용하여 SQL 쿼리를 구성하세요.
+2. `ai_complete(model=model, prompt=prompt)` 함수를 호출하고 결과 컬럼명을 "response"로 지정하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# ai_complete 호출 및 데이터프레임 생성 실습
+df = session.range(1).select(
+    ai_complete(model=model, prompt=prompt).alias("response")
+)
+```

@@ -75,3 +75,34 @@ if prompt := st.chat_input("Say something..."):
 
 - **History Management**: 챗봇 개발의 핵심은 "LLM 호출"보다 "대화 기록 관리(Append & Display)"에 있습니다.
 - **Append -> Display**: 메시지 리스트에 `append` 하는 것과, 그것을 화면에 `write` 하는 것은 별개입니다. 보통은 즉시 피드백을 위해 **동시에** 수행합니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+대화 기록을 보존하고 화면에 다시 그려주는 기초적인 챗봇 로직을 완성해 봅니다.
+
+1. `messages`라는 이름의 Session State가 없으면 빈 리스트(`[]`)로 생성하세요.
+2. `for` 루프를 사용하여 `st.session_state.messages`에 담긴 모든 메시지를 화면에 표시하세요.
+3. 새로운 질문을 입력받으면, 해당 내용을 메시지 리스트에 추가(`append`)하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 1. 초기화
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# 2. 이전 대화 출력
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.write(msg["content"])
+
+# 3. 새로운 메시지 처리
+if prompt := st.chat_input("질문을 입력하세요:"):
+    # 리스트에 추가
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # 화면에 표시
+    with st.chat_message("user"):
+        st.write(prompt)
+```

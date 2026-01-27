@@ -1,12 +1,12 @@
-For today's challenge, our goal is to run a Snowflake Cortex LLM using the `snowflake.cortex.Complete` Python API. We need to build a Streamlit app that lets a user select a model, enter a prompt, and then stream the response back. Once that's done, we will display the AI's response in real-time, word by word, as it's being generated.
+오늘의 챌린지 목표는 `snowflake.cortex.Complete` Python API를 사용하여 Snowflake Cortex LLM을 실행하는 것입니다. 사용자가 모델을 선택하고 프롬프트를 입력하면 응답을 스트리밍하는 Streamlit 앱을 만들어야 합니다. 완료되면 AI의 응답이 생성되는 대로 실시간으로 한 단어씩 표시합니다.
 
 ---
 
-### :material/settings: How It Works: Step-by-Step
+### :material/settings: 작동 방식: 단계별 설명
 
-Let's break down what each part of the code does.
+코드의 각 부분이 무엇을 하는지 분석해 보겠습니다.
 
-#### 1. Imports and Session
+#### 1. 가져오기 및 세션
 
 ```python
 import streamlit as st
@@ -24,13 +24,13 @@ except:
     session = Session.builder.configs(st.secrets["connections"]["snowflake"]).create()
 ```
 
-* **`import streamlit as st`**: Imports the library needed to build the web app's user interface (UI).
-* **`from snowflake.cortex import Complete`**: This is the key import. Instead of using the SQL function `ai_complete`, we are importing the direct Python `Complete` class from the Cortex SDK, which is designed for this kind of programmatic use.
-* **`import time`**: Added for the custom generator method, which uses a small delay to smooth out streaming.
-* **`try/except` block**: Automatically detects the environment and connects appropriately (SiS vs local/Community Cloud)
-* **`session`**: The established Snowflake connection
+* **`import streamlit as st`**: 웹 앱의 사용자 인터페이스(UI)를 구축하는 데 필요한 라이브러리를 가져옵니다.
+* **`from snowflake.cortex import Complete`**: 핵심 가져오기입니다. SQL 함수 `ai_complete`를 사용하는 대신 Cortex SDK에서 직접 Python `Complete` 클래스를 가져옵니다. 이 클래스는 이러한 종류의 프로그래밍 방식 사용을 위해 설계되었습니다.
+* **`import time`**: 부드러운 스트리밍을 위해 약간의 지연을 사용하는 사용자 지정 생성기 메서드를 위해 추가되었습니다.
+* **`try/except` 블록**: 환경을 자동으로 감지하고 적절하게 연결합니다(SiS 대 로컬/Community Cloud).
+* **`session`**: 설정된 Snowflake 연결입니다.
 
-#### 2. Configure the User Interface
+#### 2. 사용자 인터페이스 구성
 
 ```python
 llm_models = ["claude-3-5-sonnet", "mistral-large", "llama3.1-8b"]
@@ -47,16 +47,16 @@ streaming_method = st.radio(
 )
 ```
 
-* **`llm_models = [...]`**: Defines a Python list of the model names the user can choose from.
-* **`model = st.selectbox(...)`**: Creates a drop-down menu in the UI with the label "Select a model". The user's choice is stored in the `model` variable.
-* **`prompt = st.text_area(...)`**: Creates a multi-line text box for the user's prompt, and pre-populates it with the `example_prompt`. The user's final input is stored in the `prompt` variable.
-* **`streaming_method = st.radio(...)`**: NEW - Adds a radio button to let users choose between the two streaming methods, so they can see the difference in behavior.
+* **`llm_models = [...]`**: 사용자가 선택할 수 있는 모델 이름의 Python 목록을 정의합니다.
+* **`model = st.selectbox(...)`**: UI에 "Select a model" 라벨이 있는 드롭다운 메뉴를 생성합니다. 사용자의 선택은 `model` 변수에 저장됩니다.
+* **`prompt = st.text_area(...)`**: 사용자의 프롬프트를 위한 여러 줄 텍스트 상자를 생성하고 `example_prompt`로 미리 채웁니다. 사용자의 최종 입력은 `prompt` 변수에 저장됩니다.
+* **`streaming_method = st.radio(...)`**: 신규 - 사용자가 두 가지 스트리밍 방법 중에서 선택할 수 있도록 라디오 버튼을 추가하여 동작의 차이를 확인할 수 있게 합니다.
 
-#### 3. Stream the LLM Response
+#### 3. LLM 응답 스트리밍
 
-This app demonstrates **two methods** for streaming responses:
+이 앱은 응답을 스트리밍하는 **두 가지 방법**을 보여줍니다:
 
-**Method 1: Direct Streaming (stream=True)**
+**방법 1: 직접 스트리밍 (stream=True)**
 
 ```python
 if st.button("Generate Response"):
@@ -71,10 +71,10 @@ if st.button("Generate Response"):
         st.write_stream(stream_generator)
 ```
 
-* **`stream=True`**: The simplest approach. Tells `Complete` to return a generator that yields tokens as they arrive.
-* **Works when**: The API's streaming is directly compatible with `st.write_stream()`.
+* **`stream=True`**: 가장 간단한 접근 방식입니다. `Complete`에게 토큰이 도착하는 대로 생성하는 생성기를 반환하도록 지시합니다.
+* **작동 조건**: API의 스트리밍이 `st.write_stream()`과 직접 호환될 때 사용합니다.
 
-**Method 2: Custom Generator (Compatibility Mode)**
+**방법 2: 사용자 지정 생성기 (호환성 모드)**
 
 ```python
 def custom_stream_generator():
@@ -95,15 +95,15 @@ with st.spinner(f"Generating response with `{model}`"):
     st.write_stream(custom_stream_generator)
 ```
 
-* **When to use**: If `stream=True` doesn't work with `st.write_stream()` (e.g., compatibility issues with conversation history or certain API responses).
-* **How it works**: Creates a Python generator function that manually yields chunks with a small delay for smooth visual streaming.
-* **Docstring**: Documents why this alternative method exists—for compatibility when the direct method doesn't work.
-* **Best practice**: This is the more reliable method for chatbots and complex prompts (as we'll see in later days).
+* **사용 시기**: `stream=True`가 `st.write_stream()`과 작동하지 않는 경우(예: 대화 기록 또는 특정 API 응답과의 호환성 문제).
+* **작동 방식**: 시각적으로 부드러운 스트리밍을 위해 약간의 지연과 함께 청크를 수동으로 생성하는 Python 생성기 함수를 만듭니다.
+* **Docstring**: 이 대체 방법이 왜 존재하는지 문서화합니다(직접 방법이 작동하지 않을 때의 호환성을 위해).
+* **모범 사례**: 챗봇 및 복잡한 프롬프트에 대해 더 안정적인 방법입니다(나중에 살펴보겠습니다).
 
-> :material/lightbulb: **Why streaming matters:** Without streaming, users stare at a blank screen for several seconds while the LLM generates the full response. With streaming, they see words appearing immediately, making the app feel faster and more responsive even though the total time is the same.
+> :material/lightbulb: **스트리밍이 중요한 이유:** 스트리밍이 없으면 사용자는 LLM이 전체 응답을 생성하는 동안 몇 초 동안 빈 화면을 응시해야 합니다. 스트리밍을 사용하면 단어가 즉시 나타나므로 총 시간은 같더라도 앱이 더 빠르고 반응성이 좋게 느껴집니다.
 
 ---
 
-### :material/library_books: Resources
+### :material/library_books: 리소스
 - [Cortex Complete Python API](https://docs.snowflake.com/en/user-guide/snowflake-cortex/llm-functions#complete)
-- [st.write_stream Documentation](https://docs.streamlit.io/develop/api-reference/write-magic/st.write_stream)
+- [st.write_stream 문서](https://docs.streamlit.io/develop/api-reference/write-magic/st.write_stream)

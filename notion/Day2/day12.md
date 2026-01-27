@@ -58,3 +58,26 @@ if prompt := st.chat_input():
 
 - **`st.write_stream`의 반환값**: 이 함수는 화면에 글자를 뿌려주는 역할뿐만 아니라, 스트리밍이 끝난 후 **최종 완성된 문자열을 반환**해줍니다. 덕분에 별도로 문자열을 합치는 코드를 짤 필요가 없어 매우 편리합니다.
 - **Visual Feedback**: 스트리밍은 단순한 시각 효과가 아니라, 사용자의 인내심을 유지시키는 중요한 UX 장치입니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+텍스트를 한 단어씩 내보내는 제너레이터를 만들고 이를 화면에 스트리밍해 봅니다.
+
+1. 텍스트를 공백 단위로 쪼개서(`split`) 하나씩 반환(`yield`)하는 `stream_generator` 함수를 정의하세요.
+2. `st.write_stream()` 함수를 사용하여 해당 제너레이터의 내용을 실시간으로 출력하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 스트리밍 구현 실습
+def stream_generator(text):
+    for word in text.split():
+        yield word + " "
+        time.sleep(0.05)
+
+with st.chat_message("assistant"):
+    # write_stream을 사용하여 제너레이터 실행
+    response = st.write_stream(stream_generator("AI가 생성한 응답 텍스트입니다."))
+```

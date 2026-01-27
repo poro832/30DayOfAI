@@ -1,14 +1,14 @@
-For today's challenge, our goal is to enhance our chatbot with better history management. We need to add a welcome message, display conversation statistics in the sidebar, and provide a way to clear the chat history. Once that's done, we will have a more polished chatbot experience with visible conversation tracking.
+오늘의 과제는 더 나은 히스토리 관리 기능으로 챗봇을 개선하는 것입니다. 환영 메시지를 추가하고, 사이드바에 대화 통계를 표시하며, 채팅 기록을 지울 수 있는 방법을 제공해야 합니다. 이 작업이 완료되면 대화 추적이 가능한 더 세련된 챗봇 경험을 제공할 수 있습니다.
 
-**Note:** We also add `st.rerun()` after the assistant's response to ensure the sidebar stats update immediately.
+**참고:** 사이드바 통계가 즉시 업데이트되도록 어시스턴트의 응답 후 `st.rerun()`을 추가합니다.
 
 ---
 
-### :material/bug_report: The Problem from Day 10
+### :material/bug_report: Day 10의 문제점
 
-In Day 10, we stored messages in session state, so they appeared in the UI. But the LLM didn't actually see that history:
+Day 10에서는 메시지를 세션 상태에 저장하여 UI에 표시했습니다. 하지만 LLM은 실제로 그 히스토리를 보지 못했습니다:
 
-**Example Conversation (Day 10 behavior):**
+**예시 대화 (Day 10 동작):**
 ```
 User: "What's the capital of France?"
 AI: "Paris"
@@ -17,18 +17,18 @@ User: "What's the population?"
 AI: "What location are you asking about?" ❌
 ```
 
-You can **see** your previous question on screen, but the AI can't! This creates a confusing experience where the chat interface looks like it remembers, but the AI has no memory.
+화면에서 이전 질문을 **볼 수** 있지만, AI는 볼 수 없습니다! 이는 채팅 인터페이스가 기억하는 것처럼 보이지만 AI에게는 기억이 없는 혼란스러운 경험을 만듭니다.
 
-**Why?** Because we were only sending the current prompt to the LLM:
+**이유는?** 현재 프롬프트만 LLM에 전송했기 때문입니다:
 ```python
 response = call_llm(prompt)  # Only sends current message!
 ```
 
-### :material/check_circle: The Solution (Day 11)
+### :material/check_circle: 해결책 (Day 11)
 
-Today, we fix this by passing the **full conversation history** to the LLM:
+오늘은 **전체 대화 히스토리**를 LLM에 전달하여 이 문제를 해결합니다:
 
-**Same Conversation (Day 11 behavior):**
+**동일한 대화 (Day 11 동작):**
 ```
 User: "What's the capital of France?"
 AI: "Paris"
@@ -37,9 +37,9 @@ User: "What's the population?"
 AI: "Paris has approximately 2.1 million people in the city proper..." ✅
 ```
 
-Now the AI can answer follow-up questions, reference earlier topics, and maintain context throughout the conversation!
+이제 AI는 후속 질문에 답하고, 이전 주제를 참조하며, 대화 전반에 걸쳐 맥락을 유지할 수 있습니다!
 
-**How?** By building and sending the complete conversation:
+**어떻게?** 전체 대화를 구성하고 전송함으로써:
 ```python
 # Build the full conversation history for context
 conversation = "\n\n".join([
@@ -53,11 +53,11 @@ response = call_llm(full_prompt)  # Sends entire conversation!
 
 ---
 
-### :material/settings: How It Works: Step-by-Step
+### :material/settings: 작동 방식: 단계별 설명
 
-Let's break down what each part of the code does.
+코드의 각 부분이 무엇을 하는지 분석해 보겠습니다.
 
-#### 1. Initialize with a Welcome Message
+#### 1. 환영 메시지로 초기화
 
 ```python
 if "messages" not in st.session_state:
@@ -66,9 +66,9 @@ if "messages" not in st.session_state:
     ]
 ```
 
-* **Pre-populated list**: Instead of an empty list, we start with a welcome message from the assistant. This makes the chatbot feel more inviting when users first load the app.
+* **미리 채워진 리스트**: 빈 리스트 대신 어시스턴트의 환영 메시지로 시작합니다. 이렇게 하면 사용자가 앱을 처음 로드할 때 챗봇이 더 친근하게 느껴집니다.
 
-#### 2. Sidebar Statistics and Controls
+#### 2. 사이드바 통계 및 컨트롤
 
 ```python
 with st.sidebar:
@@ -79,10 +79,10 @@ with st.sidebar:
     st.metric("AI Responses", assistant_msgs)
 ```
 
-* **List comprehension**: The syntax `[m for m in messages if m["role"] == "user"]` creates a new list containing only messages where the role is "user". It's a compact way to filter a list. If you're new to this, it's equivalent to a for-loop with an if-statement inside.
-* **`st.metric(...)`**: Displays the counts in a visually appealing metric card format.
+* **리스트 컴프리헨션**: `[m for m in messages if m["role"] == "user"]` 구문은 역할이 "user"인 메시지만 포함하는 새 리스트를 생성합니다. 리스트를 필터링하는 간결한 방법입니다. 처음 접하는 경우, 이는 내부에 if문이 있는 for 루프와 동일합니다.
+* **`st.metric(...)`**: 시각적으로 매력적인 메트릭 카드 형식으로 개수를 표시합니다.
 
-#### 3. Clear History Button
+#### 3. 히스토리 지우기 버튼
 
 ```python
     if st.button("Clear History"):
@@ -92,10 +92,10 @@ with st.sidebar:
         st.rerun()
 ```
 
-* **Reset to initial state**: When clicked, we replace the messages list with just the welcome message.
-* **`st.rerun()`**: Forces the app to rerun immediately, refreshing the display to show the cleared state.
+* **초기 상태로 재설정**: 클릭하면 메시지 리스트를 환영 메시지만으로 교체합니다.
+* **`st.rerun()`**: 앱을 즉시 재실행하여 지워진 상태를 표시하도록 디스플레이를 새로 고칩니다.
 
-#### 4. Enhanced Message Display
+#### 4. 향상된 메시지 표시
 
 ```python
 for message in st.session_state.messages:
@@ -103,11 +103,11 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 ```
 
-* **`st.markdown(...)`**: We use markdown instead of `st.write()` to support rich formatting like **bold**, *italics*, and bullet points in responses.
+* **`st.markdown(...)`**: 응답에서 **굵게**, *기울임꼴*, 글머리 기호와 같은 풍부한 서식을 지원하기 위해 `st.write()` 대신 마크다운을 사용합니다.
 
-#### 5. Adding a Loading Indicator with `st.spinner`
+#### 5. `st.spinner`로 로딩 표시기 추가
 
-We introduce `st.spinner` to show users that the AI is working on their request:
+AI가 요청을 처리 중임을 사용자에게 표시하기 위해 `st.spinner`를 도입합니다:
 
 ```python
 with st.spinner("Thinking..."):
@@ -115,13 +115,13 @@ with st.spinner("Thinking..."):
     response = Complete(...)
 ```
 
-* **`st.spinner(...)`**: Displays an animated spinner with custom text while the code inside its context runs. This provides visual feedback during LLM processing, which can take a few seconds.
-* **Better UX**: Without this, users might think the app is frozen when waiting for a response. The spinner clearly indicates the AI is "thinking."
-* **Note**: In Day 12, when we add streaming, we'll remove the spinner since streaming provides its own visual feedback!
+* **`st.spinner(...)`**: 컨텍스트 내부의 코드가 실행되는 동안 사용자 지정 텍스트와 함께 애니메이션 스피너를 표시합니다. 이는 몇 초가 걸릴 수 있는 LLM 처리 중에 시각적 피드백을 제공합니다.
+* **더 나은 UX**: 이것이 없으면 사용자는 응답을 기다리는 동안 앱이 멈춘 것으로 생각할 수 있습니다. 스피너는 AI가 "생각 중"임을 명확하게 나타냅니다.
+* **참고**: Day 12에서 스트리밍을 추가할 때 스트리밍이 자체 시각적 피드백을 제공하므로 스피너를 제거할 것입니다!
 
-#### 6. Passing Conversation History to the LLM
+#### 6. LLM에 대화 히스토리 전달
 
-This is the **critical step** that gives your chatbot actual memory:
+이것은 챗봇에 실제 메모리를 제공하는 **중요한 단계**입니다:
 
 ```python
 # Build the full conversation history for context
@@ -134,14 +134,14 @@ full_prompt = f"{conversation}\n\nAssistant:"
 response = call_llm(full_prompt)
 ```
 
-* **Why this matters**: Without this, the LLM only sees the current message and can't remember what was said before. The chatbot would appear to have no memory, even though you're storing the history in the UI.
-* **Building context**: We reconstruct the entire conversation as a formatted string with clear "User:" and "Assistant:" labels.
-* **Full prompt**: The complete conversation history plus the new user message is sent to the LLM, enabling it to maintain context and answer follow-up questions.
-* **`call_llm()`**: Uses the SQL-based `ai_complete()` function that works across all deployment environments.
+* **왜 중요한가**: 이것이 없으면 LLM은 현재 메시지만 보고 이전에 무엇이 말해졌는지 기억할 수 없습니다. UI에 히스토리를 저장하고 있더라도 챗봇은 메모리가 없는 것처럼 보일 것입니다.
+* **컨텍스트 구축**: 명확한 "User:" 및 "Assistant:" 레이블이 있는 형식화된 문자열로 전체 대화를 재구성합니다.
+* **전체 프롬프트**: 전체 대화 히스토리와 새 사용자 메시지가 LLM에 전송되어 맥락을 유지하고 후속 질문에 답할 수 있습니다.
+* **`call_llm()`**: 모든 배포 환경에서 작동하는 SQL 기반 `ai_complete()` 함수를 사용합니다.
 
-#### 7. Updating Sidebar Stats with st.rerun()
+#### 7. st.rerun()으로 사이드바 통계 업데이트
 
-After adding the assistant's response to session state, we force an immediate rerun:
+어시스턴트의 응답을 세션 상태에 추가한 후 즉시 재실행을 강제합니다:
 
 ```python
 # Add assistant response to state
@@ -149,16 +149,16 @@ st.session_state.messages.append({"role": "assistant", "content": response})
 st.rerun()  # Force rerun to update sidebar stats
 ```
 
-* **`st.rerun()`**: Forces the app to rerun immediately, ensuring the sidebar statistics update right away
-* **Without this**: The sidebar metrics would lag by one message, only updating on the next user interaction
-* **Better UX**: Users see the conversation count update instantly after each AI response
+* **`st.rerun()`**: 앱을 즉시 재실행하여 사이드바 통계가 바로 업데이트되도록 합니다
+* **이것이 없으면**: 사이드바 메트릭이 한 메시지 뒤처져서 다음 사용자 상호작용 시에만 업데이트됩니다
+* **더 나은 UX**: 사용자는 각 AI 응답 후 대화 개수가 즉시 업데이트되는 것을 볼 수 있습니다
 
-When this code runs, you will see a chatbot with a welcoming initial message, a sidebar showing conversation statistics (that update immediately), a button to reset the conversation, and **true conversation memory** that allows follow-up questions.
+이 코드를 실행하면 환영 초기 메시지, 대화 통계를 표시하는 사이드바(즉시 업데이트됨), 대화를 재설정하는 버튼, 그리고 후속 질문을 허용하는 **진정한 대화 메모리**를 갖춘 챗봇을 볼 수 있습니다.
 
 ---
 
-### :material/library_books: Resources
-- [st.metric Documentation](https://docs.streamlit.io/develop/api-reference/data/st.metric)
-- [st.rerun Documentation](https://docs.streamlit.io/develop/api-reference/execution-flow/st.rerun)
-- [Session State Management](https://docs.streamlit.io/develop/concepts/architecture/session-state)
+### :material/library_books: 리소스
+- [st.metric 문서](https://docs.streamlit.io/develop/api-reference/data/st.metric)
+- [st.rerun 문서](https://docs.streamlit.io/develop/api-reference/execution-flow/st.rerun)
+- [세션 상태 관리](https://docs.streamlit.io/develop/concepts/architecture/session-state)
 

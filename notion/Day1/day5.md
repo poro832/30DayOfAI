@@ -81,3 +81,26 @@ if st.button("Generate Post"):
 
 - **Input Widgets**: `text_input`, `selectbox`, `slider` 등 적절한 위젯을 조합하여 어떤 종류의 데이터든 사용자로부터 받을 수 있습니다.
 - **Context Injection**: 인터넷에 있는 모든 정보를 LLM이 알지는 못합니다. URL 내용을 프롬프트에 포함시키거나(물론 여기서는 URL 텍스트만 줬지만, 실제로는 URL의 본문을 긁어서 주는 것이 더 정확합니다), 구체적인 지시사항을 줌으로써 LLM의 환각(Hallucination)을 줄이고 정확도를 높일 수 있습니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+사용자가 선택한 옵션들이 프롬프트에 동적으로 반영되도록 작성해 봅니다.
+
+1. 파이썬의 f-string을 사용하여 `tone`, `word_count`, `content` 변수를 포함하는 프롬프트를 만드세요.
+2. LinkedIn 전문가로서 행동하도록 페르소나를 부여해 보세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# f-string을 이용한 동적 프롬프트 생성
+prompt = f"""
+당신은 LinkedIn 전문 게시물 작성자입니다. 
+다음 내용을 참고하여 게시물을 작성해 주세요: {content}
+
+제약 사항:
+- 어조: {tone}
+- 단어 수: 약 {word_count} 단어 내외
+"""
+```

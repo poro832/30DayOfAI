@@ -69,3 +69,29 @@ with st.sidebar:
 
 - **Context Window**: LLM이 한 번에 읽을 수 있는 글자 수에는 한계가 있습니다. 대화가 정말 길어지면 오래된 대화부터 삭제하거나 요약하는 기술(Sliding Window)이 필요합니다.
 - **`st.rerun()`**: 초기화 버튼을 눌러서 데이터를 지웠는데 화면에는 여전히 글자가 남아있으면 곤란하겠죠? 이럴 때 `rerun`을 호출하여 화면을 강제로 갱신합니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+이전 대화 내용을 모두 합쳐서 "문맥(Context)"을 만들고 모델에 전달해 봅니다.
+
+1. `st.session_state.messages`에 있는 모든 대화를 하나의 문자열로 합치는 로직을 작성해 보세요.
+2. 각 메시지의 `role`에 따라 "User: " 또는 "Assistant: "를 접두사로 붙여주세요.
+3. 이렇게 만든 전체 문자열을 `call_cortex_llm` 함수의 인자로 전달하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 문맥(Context) 생성 실습
+with st.chat_message("assistant"):
+    # 1. 문맥 구축
+    context = ""
+    for m in st.session_state.messages:
+        role = "User" if m["role"] == "user" else "Assistant"
+        context += f"{role}: {m['content']}\n"
+    
+    # 2. 모델 호출
+    response = call_llm(context)
+    st.write(response)
+```

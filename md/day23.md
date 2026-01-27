@@ -1,28 +1,28 @@
-For today's challenge, our goal is to **evaluate the quality of your RAG application** using **TruLens** and Snowflake's AI Observability framework. After building a complete RAG system in Days 21-22, it's critical to measure whether it's producing accurate, grounded, and relevant answers. We'll use TruLens to automatically evaluate your RAG application using the **RAG Triad** metrics (Context Relevance, Groundedness, Answer Relevance). The app provides an interactive interface to configure evaluation settings, run evaluations, and view results directly in Snowsight.
+이번 챌린지에서는 **TruLens**와 Snowflake의 AI 관측성(Observability) 프레임워크를 사용하여 **본인이 만든 RAG 애플리케이션의 품질을 평가**하는 작업을 수행합니다. Day 21-22에서 완전한 RAG 시스템을 구축한 후에는, 그것이 정확하고 근거 있으며 관련 있는 답변을 생성하고 있는지 측정하는 것이 매우 중요합니다. TruLens를 사용하여 **RAG Triad** 지표(문맥 관련성, 근거성, 답변 관련성)를 통해 RAG 애플리케이션을 자동으로 평가할 것입니다. 앱은 평가 설정을 구성하고, 평가를 실행하며, 결과를 Snowsight에서 직접 볼 수 있는 대화형 인터페이스를 제공합니다.
 
-> :material/warning: **Prerequisite:** You need TruLens packages installed and a Cortex Search service from Day 19.
+> :material/warning: **전제 조건:** TruLens 패키지가 설치되어 있어야 하며 Day 19의 Cortex Search 서비스가 필요합니다.
 
 ---
 
-### :material/settings: How It Works: Step-by-Step
+### :material/settings: 작동 방식: 단계별 설명
 
-Let's break down what each part of the code does.
+코드의 각 부분이 어떤 역할을 하는지 살펴보겠습니다.
 
-#### 1. The RAG Triad: Three Essential Metrics
+#### 1. RAG Triad: 세 가지 필수 지표
 
-According to [Snowflake's RAG evaluation guide](https://www.snowflake.com/en/engineering-blog/eval-guided-optimization-llm-judges-rag-triad/), evaluating RAG requires measuring three dimensions:
+[Snowflake의 RAG 평가 가이드](https://www.snowflake.com/en/engineering-blog/eval-guided-optimization-llm-judges-rag-triad/)에 따르면, RAG를 평가하려면 세 가지 차원을 측정해야 합니다.
 
-| Metric | Question | Why It Matters |
+| 지표 | 질문 | 중요한 이유 |
 |--------|----------|----------------|
-| **Context Relevance** | Did we retrieve relevant documents? | Bad retrieval → bad answers |
-| **Groundedness** | Is the answer based on context? | Prevents hallucinations |
-| **Answer Relevance** | Does it answer the question? | Ensures usefulness |
+| **문맥 관련성 (Context Relevance)** | 관련 있는 문서를 검색했는가? | 잘못된 검색 → 잘못된 답변 |
+| **근거성 (Groundedness)** | 답변이 문맥에 기반하고 있는가? | 할루시네이션(환각) 방지 |
+| **답변 관련성 (Answer Relevance)** | 질문에 적절히 답변했는가? | 유용성 보장 |
 
-* **Context Relevance**: Measures whether the search system (Cortex Search) retrieved documents that are actually related to the user's question. A low score means your search needs tuning.
-* **Groundedness**: Checks if the LLM's answer comes from the provided context or if it's making things up (hallucinating). High groundedness = no hallucinations.
-* **Answer Relevance**: Evaluates whether the final answer actually addresses what the user asked. You can have great context and grounding but still give an irrelevant answer.
+* **문맥 관련성**: 검색 시스템(Cortex Search)이 사용자의 질문과 실제로 관련된 문서를 검색했는지 측정합니다. 점수가 낮으면 검색 기능을 튜닝해야 함을 의미합니다.
+* **근거성**: LLM의 답변이 제공된 문맥에서 비롯된 것인지, 아니면 내용을 지어내고 있는지(할루시네이션) 확인합니다. 높은 근거성 = 할루시네이션 없음.
+* **답변 관련성**: 최종 답변이 실제 사용자가 질문한 내용을 다루고 있는지 평가합니다. 문맥과 근거성이 훌륭하더라도 관련 없는 답변을 줄 수 있기 때문입니다.
 
-#### 2. Package Availability Check and UI Setup
+#### 2. 패키지 가용성 확인 및 UI 설정
 
 ```python
 import streamlit as st
@@ -58,11 +58,11 @@ else:
     """)
 ```
 
-* **Import check**: Verifies all required TruLens packages are installed before proceeding
-* **User feedback**: Shows clear status message with required packages if missing
-* **Graceful degradation**: Allows app to load even if packages are missing (shows instructions instead)
+* **임포트 확인**: 진행하기 전에 모든 필수 TruLens 패키지가 설치되어 있는지 확인합니다.
+* **사용자 피드백**: 패키지가 누락된 경우 필수 패키지 목록과 함께 명확한 상태 메시지를 보여줍니다.
+* **부드러운 기능 저하(Graceful degradation)**: 패키지가 없더라도 앱이 로드되도록 허용합니다(대신 지침을 보여줌).
 
-#### 3. Sidebar Configuration and Stage Setup
+#### 3. 사이드바 구성 및 스테이지 설정
 
 ```python
 # Configuration
@@ -106,13 +106,13 @@ with st.sidebar:
             st.error(f":material/cancel: Could not create stage: {str(e)}")
 ```
 
-* **Organized configuration**: Uses expanders to group related settings
-* **Default values**: Pre-fills with values from Day 19 setup
-* **Automatic stage creation**: Creates the required TruLens stage with proper encryption on page load
-* **Stage validation**: Checks and recreates stage to ensure correct configuration
-* **Manual fix option**: Provides SQL code if automatic creation fails
+* **체계적인 구성**: 익스팬더(expanders)를 사용하여 관련 설정을 그룹화합니다.
+* **기본값**: Day 19 설정의 값으로 미리 채워 넣습니다.
+* **자동 스테이지 생성**: 페이지 로드 시 적절한 암호화가 설정된 필수 TruLens 스테이지를 생성합니다.
+* **스테이지 검증**: 올바른 구성을 보장하기 위해 스테이지를 확인하고 다시 생성합니다.
+* **수동 수정 옵션**: 자동 생성이 실패할 경우를 대비하여 SQL 코드를 제공합니다.
 
-#### 4. Evaluation Configuration UI
+#### 4. 평가 구성 UI
 
 ```python
 with st.container(border=True):
@@ -146,22 +146,22 @@ with st.container(border=True):
     run_evaluation = st.button(":material/science: Run TruLens Evaluation", type="primary")
 ```
 
-* **Run counter**: Automatically increments version numbers for each evaluation run
-* **Model selection**: Choose which Cortex LLM to evaluate
-* **Flexible questions**: Edit test questions directly in the UI
-* **One-line format**: Questions separated by newlines for easy editing
+* **실행 카운터**: 각 평가 실행마다 버전 번호를 자동으로 증가시킵니다.
+* **모델 선택**: 평가할 Cortex LLM을 선택합니다.
+* **유연한 질문 설정**: UI에서 직접 테스트 질문을 편집합니다.
+* **한 줄 형식**: 편집하기 쉽도록 질문들을 개행으로 구분합니다.
 
-#### 5. What is TruLens?
+#### 5. TruLens란 무엇인가요?
 
-TruLens is an open-source library that integrates with Snowflake AI Observability to:
-- Automatically trace and evaluate LLM applications
-- Compute RAG Triad metrics automatically
-- Store results in Snowflake for analysis and comparison
-- Track experiments over time
+TruLens는 다음과 같은 기능을 위해 Snowflake AI 관측성과 통합되는 오픈 소스 라이브러리입니다:
+- LLM 애플리케이션을 자동으로 추적(trace)하고 평가
+- RAG Triad 지표를 자동으로 계산
+- 분석 및 비교를 위해 결과를 Snowflake에 저장
+- 시간에 따른 실험 내용 추적
 
-#### 6. Instrumenting Your RAG Application
+#### 6. RAG 애플리케이션 계측(Instrumenting)
 
-The first step is to create an instrumented RAG class that TruLens can trace:
+첫 번째 단계는 TruLens가 추적할 수 있도록 계측된 RAG 클래스를 만드는 것입니다.
 
 ```python
 from trulens.core.otel.instrument import instrument
@@ -208,11 +208,11 @@ Provide a helpful answer based on the context above:"""
         return answer
 ```
 
-* **`@instrument()` decorators**: Tell TruLens to trace these methods
-* **Separation of concerns**: Split retrieval and generation into separate methods for better tracing
-* **Main entry point**: The `query()` method orchestrates the full RAG pipeline
+* **`@instrument()` 데코레이터**: TruLens가 이 메서드들을 추적하도록 지시합니다.
+* **관심사 분리**: 더 나은 추적을 위해 검색(retrieval)과 생성(generation)을 별도의 메서드로 나눕니다.
+* **메인 엔트리 포인트**: `query()` 메서드가 전체 RAG 파이프라인을 조율합니다.
 
-#### 7. Setting Up TruLens Session
+#### 7. TruLens 세션 설정
 
 ```python
 from trulens.core import TruSession
@@ -240,14 +240,14 @@ tru_rag = tru_session.App(
 )
 ```
 
-* **Singleton clearing**: Prevents conflicts with previous TruLens sessions in Streamlit reruns
-* **Fresh session**: Creates a new TruSession for each evaluation run
-* **SnowflakeConnector**: Connects TruLens to your Snowflake session
-* **Unique versioning**: Combines user version with run counter to prevent collisions
-* **App registration**: Register your RAG app with metadata (name, version)
-* **main_method**: Specify which method TruLens should call for each query
+* **싱글톤(Singleton) 제거**: Streamlit 재실행 시 이전 TruLens 세션과의 충돌을 방지합니다.
+* **신규 세션**: 각 평가 실행마다 새로운 TruSession을 생성합니다.
+* **SnowflakeConnector**: TruLens를 Snowflake 세션에 연결합니다.
+* **고유 버전 관리**: 충돌을 방지하기 위해 사용자 버전과 실행 카운터를 결합합니다.
+* **앱 등록**: 메타데이터(이름, 버전)와 함께 RAG 앱을 등록합니다.
+* **main_method**: 각 쿼리에 대해 TruLens가 호출해야 할 메서드를 지정합니다.
 
-#### 8. Creating Test Dataset
+#### 8. 테스트 데이터셋 생성
 
 ```python
 # Parse questions from text area
@@ -276,14 +276,14 @@ session.sql(f"DROP TABLE IF EXISTS {dataset_table}").collect()
 test_snowpark_df.write.mode("overwrite").save_as_table(dataset_table)
 ```
 
-* **Parse from UI**: Splits user-entered text area content by newlines
-* **Query IDs**: Adds unique identifiers for tracking
-* **Database context**: Sets the working database/schema for table creation
-* **Snowflake table**: TruLens reads test data from Snowflake tables (not in-memory DataFrames)
-* **Clean slate**: Drops and recreates table to avoid conflicts
-* **Reusable dataset**: You can reference this table in future evaluation runs
+* **UI에서 파싱**: 사용자가 입력한 텍스트 영역의 내용을 줄바꿈으로 나눕니다.
+* **쿼리 ID**: 추적을 위해 고유 식별자를 추가합니다.
+* **데이터베이스 문맥**: 테이블 생성을 위해 작업 중인 데이터베이스/스키마를 설정합니다.
+* **Snowflake 테이블**: TruLens는 인메모리 DataFrame이 아닌 Snowflake 테이블에서 테스트 데이터를 읽습니다.
+* **깨끗한 시작**: 충돌을 피하기 위해 테이블을 삭제하고 다시 생성합니다.
+* **재사용 가능한 데이터셋**: 이 테이블을 향후 평가 실행에서도 참조할 수 있습니다.
 
-#### 9. Configuring and Running Evaluation
+#### 9. 평가 구성 및 실행
 
 ```python
 from trulens.core.run import Run, RunConfig
@@ -334,16 +334,16 @@ run.compute_metrics([
 st.write(":orange[:material/check:] Evaluation complete!")
 ```
 
-* **Unique run names**: Uses timestamp to ensure no conflicts between runs
-* **RunConfig**: Specifies what to evaluate and how
-* **Progress tracking**: Shows which question is being processed in real-time
-* **Answer capture**: Stores generated answers for display
-* **Batch processing**: All questions are processed automatically
-* **Timeout protection**: Prevents infinite waiting if something goes wrong
-* **Metric computation**: TruLens calculates RAG Triad scores after all queries complete
-* **Completion message**: Displays a clear indicator when evaluation finishes
+* **고유 실행 이름**: 실행 간 충돌을 방지하기 위해 타임스탬프를 사용합니다.
+* **RunConfig**: 무엇을 어떻게 평가할지 지정합니다.
+* **진행 추적**: 어떤 질문이 프로세싱되고 있는지 실시간으로 보여줍니다.
+* **답변 캡처**: 표시를 위해 생성된 답변을 저장합니다.
+* **배치 프로세싱**: 모든 질문이 자동으로 처리됩니다.
+* **타임아웃 보호**: 문제가 발생했을 때 무한 대기를 방지합니다.
+* **지표 계산**: TruLens는 모든 쿼리가 완료된 후 RAG Triad 점수를 계산합니다.
+* **완료 메시지**: 평가가 끝나면 명확한 표시기를 보여줍니다.
 
-#### 10. Displaying Results
+#### 10. 결과 표시
 
 ```python
 # Display results
@@ -373,115 +373,115 @@ Navigate to: **AI & ML → Evaluations → {app_name}**
                 st.markdown("---")
 ```
 
-* **Success summary**: Shows key details about the completed evaluation
-* **Snowsight navigation**: Clear instructions on where to view detailed RAG Triad metrics
-* **Generated answers**: Displays all Q&A pairs for immediate review in Streamlit
-* **Expandable section**: Keeps the UI clean with collapsible answers
-* **Separator**: Adds dividers between Q&A pairs for better readability
-* **Transparency**: Users can see exactly what the RAG system generated before viewing metrics
+* **성공 요약**: 완료된 평가에 대한 주요 세부 정보를 보여줍니다.
+* **Snowsight 탐색**: 상세한 RAG Triad 지표를 볼 수 있는 위치에 대한 명확한 설명을 제공합니다.
+* **생성된 답변**: Streamlit에서 즉시 검토할 수 있도록 모든 Q&A 쌍을 보여줍니다.
+* **확장 가능한 섹션**: 답변을 접을 수 있게 하여 UI를 깔끔하게 유지합니다.
+* **구분선**: 읽기 쉽도록 Q&A 쌍 사이에 구분선을 추가합니다.
+* **투명성**: 사용자는 지표를 보기 전에 RAG 시스템이 정확히 무엇을 생성했는지 확인할 수 있습니다.
 
-#### 11. Accessing Evaluation Results in Snowsight
+#### 11. Snowsight에서 평가 결과 확인하기
 
-After the app shows the success message that the evaluation is complete, follow these steps to view detailed metrics:
+앱에서 평가가 완료되었다는 성공 메시지가 나타나면, 다음 단계에 따라 상세 지표를 확인하세요.
 
-**Step-by-Step Instructions:**
+**단계별 지침:**
 
-1. **Open Snowsight** and log in to your Snowflake account
+1. **Snowsight를 열고** Snowflake 계정에 로그인합니다.
 
-2. **Navigate to the Evaluations page:**
-   - In the left sidebar, click on **AI & ML**
-   - Then click on **Evaluations**
-   - Or use this direct link: [Snowflake AI Evaluations](https://app.snowflake.com/_deeplink/#/ai-evaluations)
+2. **Evaluations 페이지로 이동합니다:**
+   - 왼쪽 사이드바에서 **AI & ML**을 클릭합니다.
+   - 그런 다음 **Evaluations**를 클릭합니다.
+   - 또는 이 직접 링크를 사용하세요: [Snowflake AI Evaluations](https://app.snowflake.com/_deeplink/#/ai-evaluations)
 
-3. **Find your evaluation:**
-   - In the displayed data table, look for the **Name** column
-   - Find **CUSTOMER_REVIEW_RAG** (or your custom app name if you changed it)
-   - Click on the app name to open the evaluation details
+3. **본인의 평가를 찾습니다:**
+   - 표시된 데이터 테이블에서 **Name** 컬럼을 확인합니다.
+   - **CUSTOMER_REVIEW_RAG**(또는 변경한 커스텀 앱 이름)를 찾습니다.
+   - 앱 이름을 클릭하여 평가 상세 내용을 엽니다.
 
-4. **View detailed results:**
-   - **RAG Triad scores** for each question:
-     - Context Relevance (retrieval quality)
-     - Groundedness (hallucination detection)
-     - Answer Relevance (answer quality)
-   - **Response metrics**: Length and duration for each query
-   - **Detailed traces**: Step-by-step view of retrieval and generation
-   - **Version comparison**: Compare metrics across multiple runs/versions
-   - **Individual query details**: Click on any question to see its full trace
+4. **상세 결과 확인:**
+   - 각 질문에 대한 **RAG Triad 점수**:
+     - 문맥 관련성 (검색 품질)
+     - 근거성 (할루시네이션 탐지)
+     - 답변 관련성 (답변 품질)
+   - **응답 지표**: 각 쿼리에 대한 길이 및 소요 시간
+   - **상세 추적(Trace)**: 검색 및 생성의 단계별 보기
+   - **버전 비교**: 여러 실행/버전 간의 지표 비교
+   - **개별 쿼리 상세**: 질문을 클릭하여 전체 추적 내용 보기
 
-**What to look for:**
-- Scores range from 0 to 1 (higher is better)
-- Scores below 0.7 indicate areas that need improvement
-- Compare scores across different versions to track improvements
+**확인해야 할 사항:**
+- 점수 범위는 0에서 1입니다(높을수록 좋음).
+- 0.7 미만의 점수는 개선이 필요한 영역임을 나타냅니다.
+- 개선 사항을 추적하기 위해 여러 버전의 점수를 비교합니다.
 
 ---
 
-### :material/adjust: Key Concepts
+### :material/adjust: 핵심 개념
 
-**Why Use TruLens?**
-- **Automated evaluation**: No manual scoring required
-- **Production-ready**: Scales to thousands of evaluations
-- **Integrated storage**: Results stored in Snowflake automatically
-- **Experiment tracking**: Compare different models, prompts, and configurations
-- **Detailed tracing**: See exactly what happened at each step
+**왜 TruLens를 사용하나요?**
+- **자동화된 평가**: 수동 점수 산정이 필요 없습니다.
+- **운영 준비 완료**: 수천 개의 평가로 확장 가능합니다.
+- **통합 저장**: 결과가 Snowflake에 자동으로 저장됩니다.
+- **실험 추적**: 다른 모델, 프롬프트 및 구성을 비교합니다.
+- **상세 추적**: 각 단계에서 일어난 일을 정확히 확인합니다.
 
-**TruLens vs Manual Evaluation:**
+**TruLens vs 수동 평가:**
 
-| Aspect | TruLens | Manual LLM-as-a-Judge |
+| 측면 | TruLens | 수동 LLM 평가 (LLM-as-a-Judge) |
 |--------|---------|----------------------|
-| Setup | Requires instrumentation | Custom prompts needed |
-| Metrics | RAG Triad built-in | Must define evaluation prompts |
-| Storage | Automatic in Snowflake | Must implement yourself |
-| Tracing | Automatic method tracking | Manual logging required |
-| Comparison | Built-in UI in Snowsight | Must build dashboards |
+| 설정 | 계측(instrumentation) 필요 | 커스텀 프롬프트 필요 |
+| 지표 | RAG Triad 공식 내장 | 평가용 프롬프트를 직접 정의해야 함 |
+| 저장 | Snowflake에 자동 저장 | 직접 구현해야 함 |
+| 추적 | 메서드 추적 자동화 | 수동 로깅 필요 |
+| 비교 | Snowsight에 내장된 UI | 대시보드를 직접 구축해야 함 |
 
-**Best Practices:**
-- **Unique app versions**: Use version numbers to track experiments
-- **Representative questions**: Include edge cases in your test set
-- **Regular evaluation**: Run before deploying changes
-- **Analyze patterns**: Look for consistently low-scoring question types
-- **Iterate based on metrics**: Use scores to guide improvements
+**권장 사항:**
+- **고유한 앱 버전**: 실험 추적을 위해 버전 번호를 사용합니다.
+- **대표성 있는 질문**: 테스트 세트에 엣지 케이스(edge cases)를 포함합니다.
+- **정기적인 평가**: 변경 사항을 배포하기 전에 실행합니다.
+- **패턴 분석**: 지속적으로 낮은 점수를 받는 질문 유형을 찾습니다.
+- **지표 기반 반복 개선**: 점수를 가이드로 삼아 개선을 진행합니다.
 
-**When to Run Evaluations:**
-- **Development**: After changing prompts, models, or retrieval settings
-- **Pre-deployment**: Before releasing to production
-- **Regression testing**: Ensure quality doesn't degrade
-- **A/B testing**: Compare different configurations
+**평가 실행 시점:**
+- **개발 중**: 프롬프트, 모델 또는 검색 설정을 변경한 후
+- **배포 전**: 운영 환경에 릴리스하기 전
+- **회귀 테스트**: 품질이 저하되지 않았는지 확인
+- **A/B 테스트**: 다른 구성 간의 비교
 
-**Interpreting RAG Triad Scores:**
-- **Context Relevance < 0.7**: Your search quality needs improvement
-  - Solution: Tune chunk size, improve embeddings, or adjust search parameters
-- **Groundedness < 0.7**: The LLM is hallucinating or extrapolating
-  - Solution: Add stronger grounding instructions to your prompt
-- **Answer Relevance < 0.7**: The answer doesn't address the question
-  - Solution: Refine prompt instructions or provide examples
+**RAG Triad 점수 해석:**
+- **문맥 관련성 < 0.7**: 검색 품질 개선이 필요합니다.
+  - 해결책: 청크 크기 튜닝, 임베딩 개선 또는 검색 매개변수 조정
+- **근거성 < 0.7**: LLM이 할루시네이션을 일으키거나 내용을 추론하고 있습니다.
+  - 해결책: 프롬프트에 더 강력한 근거 기반 지시사항 추가
+- **답변 관련성 < 0.7**: 답변이 질문을 다루지 못하고 있습니다.
+  - 해결책: 프롬프트 지시사항 상세화 또는 예시 제공
 
 ---
 
-### :material/library_books: Key Technical Concepts
+### :material/library_books: 주요 기술 개념
 
-**TruLens Architecture:**
-1. **Instrumentation**: `@instrument()` decorators trace method calls
-2. **Session Management**: `TruSession` manages the evaluation lifecycle
-3. **App Registration**: Register your application with metadata
-4. **Dataset Specification**: Define input/output columns
-5. **Run Configuration**: Specify evaluation parameters
-6. **Metric Computation**: Calculate RAG Triad after query completion
+**TruLens 아키텍처:**
+1. **계측(Instrumentation)**: `@instrument()` 데코레이터가 메서드 호출을 추적합니다.
+2. **세션 관리**: `TruSession`이 평가 수명 주기를 관리합니다.
+3. **앱 등록**: 메타데이터와 함께 애플리케이션을 등록합니다.
+4. **데이터셋 사양**: 입력/출력 컬럼을 정의합니다.
+5. **실행(Run) 구성**: 평가 매개변수를 지정합니다.
+6. **지표 계산**: 쿼리 완료 후 RAG Triad를 계산합니다.
 
-**Required Dependencies:**
+**필수 의존성:**
 
-For **pyproject.toml**:
+**pyproject.toml**의 경우:
 ```toml
 [project]
 dependencies = [
-    "trulens-core>=1.0.0",
-    "trulens-connectors-snowflake>=1.0.0",
-    "trulens-providers-cortex>=1.0.0",
-    "snowflake-snowpark-python>=1.18.0,<2.0",
-    "pandas>=1.5.0"
+    \"trulens-core>=1.0.0\",
+    \"trulens-connectors-snowflake>=1.0.0\",
+    \"trulens-providers-cortex>=1.0.0\",
+    \"snowflake-snowpark-python>=1.18.0,<2.0\",
+    \"pandas>=1.5.0\"
 ]
 ```
 
-Or for **requirements.txt**:
+또는 **requirements.txt**의 경우:
 ```
 trulens-core>=1.0.0
 trulens-connectors-snowflake>=1.0.0
@@ -490,16 +490,16 @@ snowflake-snowpark-python>=1.18.0,<2.0
 pandas>=1.5.0
 ```
 
-**TruLens Package Breakdown:**
-- `trulens-core` - Core TruLens functionality (TruSession, @instrument decorator)
-- `trulens-connectors-snowflake` - Snowflake connector for storing evaluation results
-- `trulens-providers-cortex` - Cortex LLM provider for evaluation metrics
-- `pandas` - Required for DataFrame operations with test datasets
+**TruLens 패키지 세부 내용:**
+- `trulens-core` - 핵심 TruLens 기능 (TruSession, @instrument 데코레이터)
+- `trulens-connectors-snowflake` - 평가 결과 저장을 위한 Snowflake 커넥터
+- `trulens-providers-cortex` - 평가 지표를 위한 Cortex LLM 프로바이더
+- `pandas` - 테스트 데이터셋의 DataFrame 작업에 필수
 
-**Snowflake Stage Requirements:**
-TruLens requires a stage with:
-- Server-side encryption: `ENCRYPTION = ( TYPE = 'SNOWFLAKE_SSE' )`
-- Directory table enabled: `DIRECTORY = ( ENABLE = true )`
+**Snowflake 스테이지 요건:**
+TruLens에는 다음 조건의 스테이지가 필요합니다:
+- 서버 측 암호화: `ENCRYPTION = ( TYPE = 'SNOWFLAKE_SSE' )`
+- 디렉토리 테이블 활성화: `DIRECTORY = ( ENABLE = true )`
 
 ```sql
 CREATE STAGE TRULENS_STAGE
@@ -507,8 +507,8 @@ CREATE STAGE TRULENS_STAGE
     ENCRYPTION = ( TYPE = 'SNOWFLAKE_SSE' );
 ```
 
-**Session State Management:**
-To prevent conflicts across Streamlit reruns:
+**세션 상태 관리:**
+Streamlit 재실행 간 충돌을 방지하려면:
 ```python
 # Clear TruSession singleton before each run
 from trulens.core import TruSession
@@ -521,17 +521,17 @@ app_version = f"v{st.session_state.run_counter}"
 st.session_state.run_counter += 1
 ```
 
-**Production Tips:**
-- Store evaluation results for historical analysis
-- Set up alerts for quality degradation
-- Run evaluations on a schedule (e.g., daily)
-- Include production queries in your test set
-- Compare metrics across app versions
-- Use evaluation results to prioritize improvements
+**운영 팁:**
+- 이력 분석을 위해 평가 결과를 저장합니다.
+- 품질 저하에 대한 알림을 설정합니다.
+- 평가를 스케줄에 따라 실행합니다(예: 매일).
+- 테스트 세트에 실제 운영 쿼리를 포함합니다.
+- 앱 버전 간의 지표를 비교합니다.
+- 평가 결과를 사용하여 개선 작업의 우선순위를 정합니다.
 
 ---
 
-### :material/library_books: Resources
+### :material/library_books: 리소스
 
 - [Snowflake AI Observability Documentation](https://docs.snowflake.com/en/user-guide/snowflake-cortex/ai-observability)
 - [AI Observability Tutorial](https://docs.snowflake.com/en/user-guide/snowflake-cortex/ai-observability/tutorial)

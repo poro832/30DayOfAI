@@ -97,3 +97,25 @@ context += f"User: {transcript}\nAssistant:"
 
 - 사이드바의 마이크 버튼을 누르고 말을 하면, 잠시 후 AI가 내용을 이해하고 텍스트로 답변을 줍니다.
 - 대화 내용이 화면에 채팅 형식으로 표시됩니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+Snowflake Cortex의 `AI_TRANSCRIBE` 함수를 사용하여 스테이지에 업로드된 오디오 파일을 텍스트로 변환해 봅니다.
+
+1. `SNOWFLAKE.CORTEX.AI_TRANSCRIBE` 함수를 호출하는 SQL 쿼리를 완성하세요.
+2. 결과 JSON에서 실제 텍스트 내용(`text` 필드)을 파싱하여 추출하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 음성-텍스트 변환(STT) 실습
+# 1. AI_TRANSCRIBE 호출 SQL 실행
+sql_query = f"SELECT SNOWFLAKE.CORTEX.AI_TRANSCRIBE(TO_FILE('{stage_name}', '{filename}')) as transcript"
+result = session.sql(sql_query).collect()
+
+# 2. JSON 파싱하여 텍스트 추출
+import json
+transcript = json.loads(result[0]['TRANSCRIPT'])['text']
+```

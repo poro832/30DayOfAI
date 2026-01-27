@@ -91,3 +91,31 @@ with col2:
 
 - **Separation of Concerns**: 화면 레이아웃을 나눌 때도 "무엇이 사용자에게 가장 중요한가?"를 먼저 생각해야 합니다.
 - **Config.toml**: 팀 프로젝트 시 모든 팀원이 같은 스타일을 유지하도록 도와주는 강력한 도구입니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+메인 화면의 혼잡함을 줄이기 위해 설정을 사이드바로 이동시켜 봅니다.
+
+1. `with st.sidebar:` 블록을 사용하여 사이드바 영역을 정의하세요.
+2. `tone` 선택과 `word_count` 슬라이더, 그리고 `Generate` 버튼을 사이드바 안으로 옮기세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 사이드바 레이아웃 구현
+with st.sidebar:
+    st.header("⚙️ 설정 (Settings)")
+    st.divider()
+    
+    # 설정 위젯들을 사이드바에 배치
+    tone = st.selectbox("어조 (Tone):", ["Professional", "Casual", "Funny"])
+    word_count = st.slider("단어 수:", 50, 300, 100)
+    
+    # 실행 버튼도 사이드바에 배치
+    submit = st.button("게시물 생성", type="primary")
+
+if submit:
+    # 실행 로직...
+```

@@ -72,3 +72,31 @@ if st.button("Generate Post"):
 
 - **사용자 심리**: 진행 상황이 구체적일수록 사용자는 체감 대기 시간을 짧게 느낍니다.
 - **`status.update`**: 작업이 끝나면 "성공!"으로 라벨을 바꾸고 창을 닫아줌으로써, 사용자의 시선이 자연스럽게 결과물(Output)로 이동하도록 유도하는 디자인 패턴입니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+사용자에게 작업의 진행 단계를 상세히 보여주는 상태창을 구현해 봅니다.
+
+1. `with st.status("엔진 구동 중...") as status:` 구문을 사용하여 상태 컨테이너를 만드세요.
+2. `st.write()`를 사용하여 최소 2개 이상의 중간 단계(예: "프롬프트 작성 중...", "Cortex 호출 중...")를 표시하세요.
+3. 모든 작업이 완료되면 `status.update()`를 사용하여 라벨을 "완료되었습니다!"로 바꾸고 상태를 `complete`로 변경하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# st.status를 이용한 상태 UI 구현
+with st.status("엔진 구동 중...", expanded=True) as status:
+    # 1. 중간 단계 표시
+    st.write("🔍 데이터를 분석하고 프롬프트를 구성합니다.")
+    prompt = f"Create a {tone} LinkedIn post about {content} in {word_count} words."
+    time.sleep(1) # 지연 효과
+    
+    # 2. 메인 작업 실행
+    st.write("🤖 Snowflake Cortex API를 호출합니다.")
+    response = call_cortex_llm(prompt)
+    
+    # 3. 상태 업데이트 및 완료
+    status.update(label="✅ 게시물 생성 완료!", state="complete", expanded=False)
+```

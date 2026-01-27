@@ -182,3 +182,20 @@ Streamlit 실행 코드 = python -m streamlit run 파일명.py
 - `CUSTOMER_REVIEW_SEARCH` 서비스 생성됨
 - 100개 리뷰에 대한 의미 기반 검색 준비 완료
 - Day 20에서 "따뜻한 장갑" 검색 시 관련 리뷰 찾기 가능
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+Snowflake의 `CUSTOMER_REVIEW_SEARCH` 서비스를 생성하기 위한 SQL 명령을 Python에서 실행해 봅니다.
+
+1. `create_service_sql` 변수에 저장된 SQL 문을 실행하세요.
+2. `session.sql().collect()`를 사용하여 명령을 완료하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# Cortex Search 서비스 생성 실습
+# session.sql()과 .collect()를 사용하여 SQL 실행
+session.sql(create_service_sql).collect()
+```

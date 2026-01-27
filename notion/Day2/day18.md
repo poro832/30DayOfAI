@@ -233,3 +233,27 @@ Streamlit 실행 코드 = python -m streamlit run 파일명.py
 - Snowflake의 `REVIEW_EMBEDDINGS` 테이블에 저장
 - Day 19에서 이 벡터들을 사용하여 의미 기반 검색 서비스 생성
 - "따뜻한 장갑" 검색 시 "손을 포근하게" 같은 의미적으로 유사한 리뷰 찾기 가능
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+Snowflake Cortex의 `embed_text_768` 함수를 사용하여 텍스트 청크를 벡터로 변환해 봅니다.
+
+1. `snowflake-arctic-embed-m` 모델을 지정하여 임베딩 함수를 호출하세요.
+2. 대상 텍스트는 `row['CHUNK_TEXT']`를 사용하세요.
+3. 생성된 임베딩 값을 `embeddings` 리스트에 청크 ID와 함께 저장하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 텍스트 임베딩 생성 실습
+# 1. Cortex 임베딩 함수 호출
+emb = embed_text_768(model='snowflake-arctic-embed-m', text=row['CHUNK_TEXT'])
+
+# 2. 결과 저장
+embeddings.append({
+    'chunk_id': row['CHUNK_ID'],
+    'embedding': emb
+})
+```

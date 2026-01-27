@@ -70,3 +70,23 @@ if user_input := st.chat_input("Say something..."):
 - **`st.chat_input`**: 항상 화면 최하단에 고정되며, 값을 입력받으면 앱을 Rerun 시킵니다.
 - **`st.chat_message`**: 단순 텍스트뿐만 아니라 그림, 표, 그래프 등 어떤 Streamlit 요소든 담을 수 있는 만능 컨테이너입니다.
 - **휘발성**: 별도의 저장소가 없으면 지난 대화는 Rerun 시 날아갑니다. 그래서 "채팅 히스토리 리스트"가 필요합니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+사용자와 어시스턴트의 대화가 실제 채팅창처럼 보이도록 말풍선 UI를 구현해 봅니다.
+
+1. `st.chat_message("user")`를 사용하여 사용자의 인사말을 출력하세요.
+2. `st.chat_message("assistant")`를 사용하여 어시스턴트의 답변과 이모지를 출력하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 정적 채팅 메시지 구현
+with st.chat_message("user"):
+    st.write("안녕하세요, Snowflake에 대해 알려주세요!")
+
+with st.chat_message("assistant"):
+    st.write("안녕하세요! Snowflake는 클라우드 기반의 데이터 플랫폼입니다. ❄️")
+```

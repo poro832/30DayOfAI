@@ -79,3 +79,32 @@ response = call_cortex_llm(full_prompt)
 
 - **Interaction Design**: 사용자가 텍스트로 "너는 이제부터 해적이야"라고 치게 할 수도 있지만, **버튼(Preset)** 을 제공하는 것이 훨씬 편리한 UX입니다.
 - **Top Priority**: 시스템 프롬프트는 LLM이 혼란스러워할 때(예: 사용자가 "해적 그만해"라고 할 때) 기준점이 되어주므로 항상 프롬프트 최상단에 배치해야 합니다.
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+챗봇에게 특정한 성격을 부여하는 시스템 프롬프트 주입 로직을 완성해 봅니다.
+
+1. `st.session_state`에 `system_prompt`라는 키가 없으면 기본값("You are a helpful assistant.")을 넣어주세요.
+2. 최종 프롬프트를 만들 때, 맨 앞에 `st.session_state.system_prompt` 내용을 포함시키세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# 시스템 프롬프트 주입 실습
+# 1. 초기화
+if "system_prompt" not in st.session_state:
+    st.session_state.system_prompt = "You are a helpful assistant."
+
+# ... (중략) ...
+
+# 2. 프롬프트 구성 시 가장 상단에 배치
+full_prompt = f"""
+System Instruction: {st.session_state.system_prompt}
+
+Context: {conversation_history}
+User: {prompt}
+Assistant:
+"""
+```

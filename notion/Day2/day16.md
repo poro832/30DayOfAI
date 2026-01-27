@@ -236,3 +236,28 @@ Streamlit 실행 코드 = python -m streamlit run 파일명.py
 - 100개의 리뷰 파일을 한번에 업로드하여 텍스트 추출
 - Snowflake의 `EXTRACTED_DOCUMENTS` 테이블에 모든 텍스트와 메타데이터 저장
 - Day 17에서 이 텍스트들을 청크로 분할하여 RAG 파이프라인 구축 준비 완료
+
+---
+
+# 💡 실습 과제 (Hands-on Practice)
+
+추출된 문서의 텍스트와 메타데이터를 Snowflake 테이블에 하나씩 삽입하는 로직을 완성해 봅니다.
+
+1. `INSERT INTO` SQL 구문을 작성하여 텍스트 데이터(`safe_text`)와 파일 정보들을 테이블에 저장하세요.
+2. `session.sql().collect()`를 사용하여 파이썬에서 SQL 명령을 실행하세요.
+
+# ✅ 정답 코드 (Solution)
+
+```python
+# Snowflake 테이블 데이터 삽입 실습
+# 1. SQL 쿼리 구성
+insert_sql = f"""
+INSERT INTO {database}.{schema}.{table_name}
+(FILE_NAME, FILE_TYPE, FILE_SIZE, EXTRACTED_TEXT, WORD_COUNT, CHAR_COUNT)
+VALUES ('{data['file_name']}', '{data['file_type']}', {data['file_size']}, 
+        '{safe_text}', {data['word_count']}, {data['char_count']})
+"""
+
+# 2. 실행
+session.sql(insert_sql).collect()
+```
