@@ -181,22 +181,30 @@ if audio is not None:
                     # SQL을 위한 파일 이름 정리
                     safe_file_name = filename.replace("'", "''")
                     
-                    # AI_TRANSCRIBE 실행
+                    # [실습] Snowflake의 AI_TRANSCRIBE 함수를 사용하여 오디오 파일을 텍스트로 변환하세요.
+                    # 힌트: SNOWFLAKE.CORTEX.AI_TRANSCRIBE(TO_FILE(stage_name, safe_file_name))
+                    
                     sql_query = f"""
                     SELECT SNOWFLAKE.CORTEX.AI_TRANSCRIBE(
                         TO_FILE('{stage_name}', '{safe_file_name}')
                     ) as transcript
                     """
                     
-                    result_rows = session.sql(sql_query).collect()
+                    # 여기에 코드를 작성하세요 (아래 코드를 완성하세요)
+                    # result_rows = session.sql(sql_query).collect()
+                    # json_string = result_rows[0]['TRANSCRIPT']
                     
-                    if result_rows:
-                        # JSON 응답 파싱
-                        json_string = result_rows[0]['TRANSCRIPT']
-                        transcript_data = json.loads(json_string)
-                        transcript = transcript_data.get("text", "")
-                        
-                        if transcript:
+                    # 실습을 위해 임시로 비워둡니다. 위 주석을 참고하여 채워보세요.
+                    transcript = None # 이 부분을 수정하여 텍스트를 추출하세요
+                    
+                    # [실습 정답용 코드 - 실제 동작을 위해 채워져 있어야 하지만, 교육용으로 가려둡니다]
+                    # result_rows = session.sql(sql_query).collect()
+                    # if result_rows:
+                    #     json_string = result_rows[0]['TRANSCRIPT']
+                    #     transcript_data = json.loads(json_string)
+                    #     transcript = transcript_data.get("text", "")
+                    
+                    if transcript:
                             # 사용자 메시지 추가
                             st.session_state.voice_messages.append({
                                 "role": "user",
